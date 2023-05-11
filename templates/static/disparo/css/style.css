@@ -1,0 +1,63 @@
+span.select2 {
+    width: 100%!important;
+}
+
+.diplayvtr {
+    width: 100%;
+    text-align: center;
+}
+
+span.hidd {
+    display: none!important;
+}
+
+button.btn.btn-success.hidd {
+    display: none!important;
+}
+
+.table#tabDepVit {
+    max-height: 100px!important;
+    overflow: auto;
+}
+
+
+/* ARQUIVOS DO PREVIW CONTAINER */
+.preview-container {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+  }
+
+  .preview-imagem {
+    max-width: 80px;
+    max-height: 80px;
+  }
+
+  .preview-remover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 18px;
+    color: red;
+    cursor: pointer;
+    background-color: transparent; /* Fundo transparente */
+    border-radius: 50%;
+    font-weight: bold; /* Fonte em negrito */
+  }
+
+    /* Estilo específico para o contêiner do Select2 */
+    .form-dep .select2-container {
+        width: 100% !important;
+        position: relative !important;
+    }
+    
+    /* Estilo específico para o dropdown do Select2 */
+    .form-dep .select2-dropdown {
+        width: 100% !important;
+    }
+    
+    /* Estilo específico para a seleção do Select2 */
+    .form-dep .select2-selection {
+        width: 100% !important;
+    }
+  
