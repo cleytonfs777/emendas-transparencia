@@ -1,0 +1,269 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Ajuda {%endblock%}
+{% block estilo %}
+<link rel="stylesheet" href="{% static 'cadastrar/css/style.css' %}" />
+
+{%endblock %} {% block content %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %} {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %} {% endif %}
+  <div class="container nav_tabs">
+    <div
+      class="container titulo-main d-flex justify-content-center rounded-top"
+    >
+      <h3 class="text-light fw-bold m-2">GERENCIADOR DE AJUDA</h3>
+    </div>
+    <div class="table-scroll">
+      <table class="table table-light table-striped" id="idListDep">
+        <thead class="table-warning">
+        <tr>
+          <th scope="col">nome</th>
+          <th scope="col">categoria</th>
+          <th scope="col">tema</th>
+          <th scope="col">telefone</th>
+          <th scope="col">data</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for ajuda in ajudas %}
+        <tr>
+          <td>{{ajuda.nome}}</td>
+          <td>{{ajuda.categoria}}</td>
+          <td>{{ ajuda.get_tema_display }}</td>
+          <td>{{ajuda.telefone}}</td>
+          <td>{{ajuda.data}}</td>
+          <td>
+            <a
+              class="btn btn-primary"
+              href="#"
+              onclick="resetajudabutton()"
+              data-bs-toggle="modal"
+              data-bs-target="#helpacess"
+              data-bs-whateverajudanome="{{ajuda.nome}}"
+              data-bs-whateverajudaid="{{ajuda.id}}"
+              data-bs-whateverajudacategoria="{{ajuda.categoria}}"
+              data-bs-whateverajudatema="{{ajuda.get_tema_display}}"
+              data-bs-whateverajudatelefone="{{ajuda.telefone}}"
+              data-bs-whateverajudamensagem="{{ajuda.mensagem}}"
+              data-bs-whateverajudadata="{{ajuda.data}}"
+              data-bs-whatevertelegramuser="{{ajuda.id_user}}"
+              ><i class="bi bi-question-octagon"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- INICIO PAGINAÇÃO -->
+    <nav class="bg-ligth" id="idAjudaNav">
+      <ul class="pagination d-flex">
+        {% if ajudas.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'ajuda_manager' %}?page_ajuda={{ajudas.previous_page_number}}"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% endif %} 
+        {% for num in ajudas.paginator.page_range %} 
+        {% if num == ajudas.number %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'log_disparo' %}?page_ajuda={{num}}"
+            >{{num}}</a
+          >
+        </li>
+        {% endif %} 
+        {% endfor %} 
+        {% if ajudas.has_next %}
+        <li class="page-item">
+        <a
+            class="page-link"
+            href="{% url 'log_disparo' %}?page_ajuda={{ajudas.next_page_number}}"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+  <!-- FIM PAGINAÇÃO -->
+
+    <div
+      class="modal fade"
+      id="helpacess"
+      tabindex="-1"
+      aria-labelledby="helpmodal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="helpmodal"
+            >
+              SOLICITAÇÕES DE AJUDA PENDENTES
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+            <form id="helpform" class="bg-white p-1" method="post" action="{% url 'responde_user' %}">
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-1 d-flex flex-row">
+                    <label class="fw-bold">Nome: </label>
+                    <label class="mx-2" id="modalajudanome"></label>
+                  </div>
+                  <div class="py-1 d-flex flex-row">
+                    <label class="fw-bold">Categoria: </label>
+                    <label id="modalajudacategoria" class="mx-2"></label>
+                  </div>
+                  <div class="py-1 d-flex flex-row">
+                    <label class="fw-bold">Telefone: </label>
+                    <label id="modalajudatelefone" class="mx-2"></label>
+                  </div>
+                  <div class="py-1 d-flex flex-row">
+                    <label class="fw-bold">Data: </label>
+                    <label id="modalajudadata" class="mx-2"></label>
+                  </div>
+                  <div class="py-1 d-flex flex-column">
+                    <div class="card shadow">
+                      <div class="card-body">
+                        <h6 id="modalajudatema" class="card-title fw-bold text-center">
+                          DIFICULDADE DE ACESSO
+                        </h6>
+                        <input type="hidden" id="h3_text" name="h3_text" value="">
+                        <p id="modalajudamensagem" class="card-text">
+                                                  </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="py-1 d-flex flex-column">
+                    <div class="card shadow">
+                      <div class="card-body">
+                        <h6 class="card-title fw-bold text-center text-success">
+                          RESPOSTA
+                        </h6>
+                        <textarea
+                        name="resposta"
+                        class="form-control border border-dark"
+                        id="resposta"
+                        rows="4"
+                      ></textarea>
+                        <input type="checkbox" name="msgpadrao" id="msgpadrao">
+                        <label class="my-2" for="msgpadrao">Mensagem Padrão</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <input type="hidden" name="usertelegram" id="modalusertelegram" value="">
+                <input type="hidden" name="modalidentif" id="modalidentif" value="">
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Resolver</button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+          </div>
+        </div>
+      </div>
+    </div>
+    {%endblock %}
+  </div>
+</div>
+{% block mscripts %}
+<script>
+  // FUNÇÃO RESPONSAVEL POR CONTROLAR O A AUTORIZAÇÃO DE TITULARES NO SISTEMA
+function resetajudabutton(){
+  msg_padrao = document.getElementById('msgpadrao')
+  msg_padrao.checked = false
+}
+
+const helpacess = document.getElementById('helpacess')
+if(helpacess){
+
+  helpacess.addEventListener('show.bs.modal', function (event) {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const ajudanome = button.getAttribute('data-bs-whateverajudanome')
+    const ajudacategoria = button.getAttribute('data-bs-whateverajudacategoria')
+    const ajudatema = button.getAttribute('data-bs-whateverajudatema')
+    const ajudatelefone = button.getAttribute('data-bs-whateverajudatelefone')
+    const ajudadata = button.getAttribute('data-bs-whateverajudadata')
+    const ajudamensagem = button.getAttribute('data-bs-whateverajudamensagem')
+    const telegramuser = button.getAttribute('data-bs-whatevertelegramuser')
+    const idajuda = button.getAttribute('data-bs-whateverajudaid')
+
+    // Atualizando campos do meu model deputado
+
+    const modalTitle = document.querySelector("#helpmodal")
+    const modalajudanome = document.querySelector("#modalajudanome")
+    const modalajudacategoria = document.querySelector("#modalajudacategoria")
+    const modalajudatelefone = document.querySelector("#modalajudatelefone")
+    const modalajudadata = document.querySelector("#modalajudadata")
+    const modalajudatema = document.querySelector("#modalajudatema")
+    const modalajudamensagem = document.querySelector("#modalajudamensagem")
+    const modalusertelegram = document.querySelector("#modalusertelegram")
+    const modaltemaback = document.querySelector("#h3_text")
+    const modalidentif = document.querySelector("#modalidentif")
+    
+    // const authCatTit2 = capitalizeFirstLetter(authCatTit)
+  
+    modalTitle.textContent = 'Analisar dados titular - ' + ajudanome
+    modalajudanome.innerText = ajudanome
+    modalajudacategoria.innerText = ajudacategoria
+    modalajudatelefone.innerText = ajudatelefone
+    modalajudadata.innerText = ajudadata
+    modalajudatema.innerText = ajudatema
+    modalajudamensagem.innerText = ajudamensagem
+    modalusertelegram.value = telegramuser
+    modaltemaback.value = ajudatema
+    modalidentif.value = idajuda
+
+    // categoriaestacadastrada(modalauthCatTit.value)
+ 
+  })
+
+}
+</script>
+{% endblock %}

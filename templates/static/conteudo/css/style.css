@@ -1,0 +1,226 @@
+/*A propriedade :root permite criar variáveis no css*/
+:root {
+    --primary-color: #434A4F;
+    --secondary-color: rgb(110, 172, 223);
+    --dark-color: rgb(0, 12, 22);
+    --cbm-color: #F47920;
+}
+
+
+* {
+    font-family: 'Lato', sans-serif;
+}
+
+body {
+    background: #c9c4c4;
+}
+
+.form-dep{
+    padding: 1rem;
+    
+}
+
+button.btn-primary.classico {
+    width: 80%;
+    background: var(--cbm-color);
+    border: none;
+    font-weight: bold;
+    
+}
+
+#main-container {
+    margin-top: 8rem;
+}
+
+
+/* ESTILOS PARA PAGINA CADASTRAR*/
+
+#main-container.container-cad{
+    position: relative;
+    height: 100vh;
+}
+
+#main-container.container-cad ul{
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0;
+    margin-bottom: 0;
+}
+#main-container.container-cad ul li{
+    float: left;
+}
+
+#main-container.container-cad ul li label{
+    color: white;
+    background: #363b48;
+    width: 100%;
+    padding: 25px;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 8px solid var(--cbm-color);
+
+}
+
+.rd_tabs:checked ~ label {
+    background-color: #F47920!important;
+}
+
+.rd_tabs {
+    display: none;
+}
+
+div.content {
+    height: 5rem;
+    width: 100%;
+    background: #F47920
+}
+
+
+
+.bg-primary-color {
+    background: var(--primary-color);
+}
+
+.bg-cbm-color#topo-main {
+    background: var(--cbm-color)!important;
+}
+
+.bg-secondary-color {
+    background: var(--secondary-color);
+}
+
+.bg-dark-color {
+    background: var(--dark-color);
+}
+
+.primary-color {
+    color: var(--primary-color);
+}
+
+
+#navbar-items ul li a,
+span.main-top {
+    color: #fff;
+    font-weight: bold;
+}
+
+.secondary-color {
+    color: var(--secondary-color);
+}
+
+.dark-color {
+    color: var(--dark-color);
+}
+
+/* NAVBAR */
+
+#navbar {
+    border-bottom: 1px solid #7a7a7a;
+}
+
+#navbar a:hover,
+span.main-top:hover {
+    color:var(--cbm-color);
+}
+
+#navbar a.active {
+    border-bottom: 1px solid var(--cbm-color);
+}
+
+.navbar-brand {
+    display: flex;
+}
+
+.navbar-brand img {
+    width: 80px;
+}
+
+.navbar-brand span {
+    font-size: 1.5em;
+    padding-left: .5em;
+} 
+
+#navbar-items .navbar-nav {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#navbar-items .nav-item {
+    margin: 0 1em;
+}
+
+button.navbar-toggler {
+    color: #fff;
+    border-color: #fff;
+}
+
+.unvisto {
+    display:none;
+}
+/* ESTILOS DA LISTAR DISPARADOR*/
+
+a.btn-manag .bi {
+    font-size: .8rem;
+}
+
+.stilo-message {
+    margin: 1rem;
+}
+
+td, th {
+    text-align: center;
+}
+.bg-custom-light {
+    background-color: #cc6565!important;
+}
+ul.sub-ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+}
+ul.ul-click {
+    display: none;
+}
+li.ajust-sublist {
+    cursor: pointer;
+    margin-left: 1em!important;
+}
+
+li.ajust-sublist a:hover {
+    cursor: pointer;
+    color: #c7490f;
+    
+}
+
+.table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .nav_tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .nav_tabs ul {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  
+  .nav_tabs li.tab-item {
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 33.3333%; /* Limita a largura máxima de cada elemento 'li' a um terço da largura do contêiner */
+  }
+
+  div.titulo-main {
+    background-color: #F47920!important;
+    margin-top: 1.5rem!important;
+}
+  
+  

@@ -1,0 +1,886 @@
+{% extends 'base.html' %} {% load static %} {% load filters %} {% block title%}Cadastro {%endblock%} {% block estilo %}
+<link rel="stylesheet" href="{% static 'cadastrar/css/style.css' %}" />
+
+{% endblock %} {% block content %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %} {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %} {% endif %}
+  <div class="container nav_tabs table-responsive">
+    <ul class="d-flex mt-4">
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="depsauth" checked />
+        <label for="depsauth" class="list-authorization-main">TITULAR</label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="acessauth" />
+        <label for="acessauth" class="list-authorization-main">ASSESSOR</label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <div class="label-container">
+          <input type="radio" name="tabs" class="rd_tabs" id="dispauth" />
+          <label for="dispauth" class="list-authorization-main">USUARIO</label>
+        </div>
+      </li>
+    </ul>
+    <!--LIST1-->
+    <div class="table-responsive">
+    <table class="table table-light table-striped" id="idAuthDep">
+        <thead class="table-warning">
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">ID User</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">Recebe msg</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for titular in titulares_auth %}
+
+        <tr>
+          <td style="text-align: center">{{titular.nome_tit}}</td>
+          <td>{{titular.nome_cat}}</td>
+          <td>{{titular.id_t}}</td>
+          <td>{{titular.ddd}} {{titular.telfnumber}}</td>
+          {% if titular.only_assec == True %}
+          <td>Não</td>
+          {% else %}
+          <td>Sim</td>
+          {% endif %}
+          <td>
+            <a
+              href="#"
+              class="btn btn-primary text-light m-2 btn-manag edit-btn"
+              onclick="resetmodeltit()"
+              data-bs-toggle="modal"
+              data-bs-target="#authTitular"
+              data-bs-whateverId="{{titular.id}}"
+              data-bs-whateverAuthNamTit="{{titular.nome_tit}}"
+              data-bs-whateverAuthCatTit="{{titular.nome_cat}}"
+              data-bs-whateverAuthIdTit="{{titular.id_t}}"
+              data-bs-whateverAuthRecTit="{{titular.only_assec}}"
+              data-bs-whateverdddTit="{{titular.ddd}}"
+              data-bs-whatevertelTit="{{titular.telfnumber}}"
+              data-bs-whatevertitmatch="{{titular.nome_cat|retorna_id:titular.nome_tit}}"
+              ><i class="fs-6 bi bi-hand-thumbs-up-fill"></i
+            ></a>
+
+            <a
+              href="{% url 'auth_deleta_titular' titular.id %}"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir o titular {{titular.nome}}?')"
+              ><i class="fs-6 bi bi-hand-thumbs-down-fill"></i
+            ></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+    <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+    <nav class="bg-ligth" id="idAuthTitNav">
+      <ul class="pagination d-flex">
+        {% if titulares_auth.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'add_authorization' %}?page_titular_auth={{titulares_auth.previous_page_number}}&tabela=titular"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% endif %} 
+        {% for num in titulares_auth.paginator.page_range %} 
+        {% if num == titulares_auth.number %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'add_authorization' %}?page_titular_auth={{num}}&tabela=titular"
+            >{{num}}</a
+          >
+        </li>
+        {% endif %} 
+        {% endfor %} 
+        {% if titulares_auth.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'add_authorization' %}?page_titular_auth={{titulares_auth.next_page_number}}&tabela=titular"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!-- FIM NUMERAÇÃO DE PAGINAS -->
+   
+    <!-- MODAL TITULARES -->
+    <div
+      class="modal fade"
+      id="authTitular"
+      tabindex="-1"
+      aria-labelledby="authModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="authModalLabel"
+            >
+              Analisar dados titular -
+            </h6>
+            <p id="teste"></p>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA TITULARES -->
+            <form
+              id="idauthFormDep2"
+              class="bg-white p-1"
+              method="post"
+              action="{% url 'rec_authorization_tit' %}"
+            >
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="titularfinded" class="form-label"
+                      >Titular</label
+                    >
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="titularfinded"
+                      name="titularfinded"
+                      onchange="selectdisplay()"
+                    >
+                      <option disabled selected>Selecione o parlamentar</option>
+                      {% for titular in titulares %}
+                      <option value="{{titular.id}}">
+                        {{titular.categoria_id|adiciona_categoria}}
+                        {{titular.nome}}
+                      </option>
+                      {% endfor %}
+                      <option>Não listado</option>
+                    </select>
+                  </div>
+                  <div
+                    id="titularnotfinded1"
+                    class="row mt-2 form-dep d-flex justify-content-center align-items-start d-none"
+                  >
+                    <div
+                      class="col-10 d-flex justify-content-center align-items-center alert alert-danger"
+                    >
+                      Titular não encontrado
+                    </div>
+                    <div class="col-1 mt-2">
+                      <button
+                        type="button"
+                        class="btn btn-warning py-1"
+                        onclick="addTitModel()"
+                      >
+                        <i class="fs-4 bi bi-person-fill-add"></i>
+                      </button>
+                    </div>
+                  </div>
+                  {% comment %} LINHA QUE DEFINE O CADASTRO DE ASSESSORES
+                  {%endcomment %}
+                  <div
+                    id="addtitnotfind"
+                    class="row form-dep py-0 d-none"
+                    style="background: #e7edef"
+                  >
+                    <div class="col-lg-12 py-2">
+                      <label for="addcategtit" class="form-label"
+                        >Categoria</label
+                      >
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary rounded-circle mb-2"
+                        onclick="addCatModel('titular')"
+                      >
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                      <select
+                        class="form-select"
+                        aria-label="Default select"
+                        id="addcategtit"
+                        name="addcategtit"
+                      >
+                        <option disabled selected>Selecione a categoria</option>
+                        {% for categoria in categorias %}
+                        <option value="{{categoria.nome}}">
+                          {{categoria.nome}}
+                        </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-lg-12 d-none" id="divlastaddtit">
+                      <input
+                        type="text"
+                        class="form-control py-2"
+                        id="lastaddtit"
+                        style="padding-bottom: 10%"
+                        name="lastaddtit"
+                      />
+                    </div>
+                    <div class="col-lg-12 py-2">
+                      <label for="authnamedtit" class="form-label"
+                        >Nome do Titular</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control py-2"
+                        id="authnamedtit"
+                        style="padding-bottom: 10%"
+                        name="authnamedtit"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- INICIO DO DDD E TELEFONE -->
+                <div class="row form-dep py-0">
+                  <div class="py-2 col-2">
+                    <label for="dddauttit" class="form-label">DDD</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dddauttit"
+                      name="dddauttit"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="changeFoco(this)"
+                      maxlength="2"
+                    />
+                  </div>
+                  <div class="py-2 col-10">
+                    <label for="telefauttit" class="form-label">Telefone</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telefauttit"
+                      name="telefauttit"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="formatarNumero(this)"
+                      maxlength="10"
+                    />
+                  </div>
+                </div>
+                <div class="row form-dep py-0">
+                  <input
+                    type="hidden"
+                    name="authuserchat"
+                    id="authuserchat"
+                    value=""
+                  />
+                  <div
+                    class="form-check form-switch py-2 d-flex align-items-center justify-content-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="auth_only_assec"
+                      name="auth_only_assec"
+                    />
+                    <label class="form-check-label ms-3" for="auth_only_assec"
+                      >Apenas o Assessor recebe a informação?</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary text-light">
+                  Salvar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA TITULARES -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--LIST2 -->
+    <div class="table-responsive">
+    <table class="table table-light table-striped unvisto" id="authidListAss">
+        <thead class="table-warning">
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Titular</th>
+          <th scope="col">Telefone</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assessor in assessores_auth %}
+        <tr>
+          <td style="text-align: center">{{assessor.nome_ass}}</td>
+          <td>{{assessor.nome_cat}} {{assessor.nome_tit}}</td>
+          <td>({{assessor.ddd}}) {{assessor.telfnumber}}</td>
+          <td>
+            <a
+              href="#"
+              class="btn btn-primary text-light m-2 btn-manag edit-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#authAssessor"
+              data-bs-whatevernamAss="{{assessor.nome_ass}}"
+              data-bs-whateveridUserAss="{{assessor.id_a}}"
+              data-bs-whateverNomeTitAss="{{assessor.nome_tit}}"
+              data-bs-whateverNomeCatAss="{{assessor.nome_cat}}"
+              data-bs-idfullTit="{{assessor.nome_tit|verifica_titular:assessor.nome_cat}}"
+              data-bs-whateverdddAss="{{assessor.ddd}}"
+              data-bs-whatevertelAss="{{assessor.telfnumber}}"
+              onclick="resetmodel()"
+              ><i class="fs-6 bi bi-hand-thumbs-up-fill"></i
+            ></a>
+            <a
+              href="{% url 'auth_deleta_assessor' assessor.id %}"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir o Assessor ?')"
+              ><i class="fs-6 bi bi-hand-thumbs-down-fill"></i
+            ></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+  <nav class="bg-ligth unvisto" id="idAuthAssNav">
+    <ul class="pagination d-flex">
+      {% if assessores_auth.has_previous %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_assessor_auth={{assessores_auth.previous_page_number}}&tabela=titular"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% endif %} 
+      {% for num in assessores_auth.paginator.page_range %} 
+      {% if num == assessores_auth.number %}
+      <li class="page-item active">
+        <a class="page-link" href="#">{{num}}</a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_assessor_auth={{num}}&tabela=titular"
+          >{{num}}</a
+        >
+      </li>
+      {% endif %} 
+      {% endfor %} 
+      {% if assessores_auth.has_next %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_assessor_auth={{assessores_auth.next_page_number}}&tabela=titular"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- FIM NUMERAÇÃO DE PAGINAS -->
+    <!-- MODAL ASSESSORES -->
+    <div
+      class="modal fade"
+      id="authAssessor"
+      tabindex="-1"
+      aria-labelledby="authAssModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="authAssModalLabel"
+            >
+              Analisar dados do assessor
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+            <form
+              id="idAuthFormAss2"
+              class="bg-white p-1"
+              method="post"
+              action="{% url 'rec_authorization_ass' %}"
+            >
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="authdepRep2" class="form-label"
+                      >Titular Representado</label
+                    >
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="authdepRep2"
+                      name="authdepRep2"
+                      onchange="ajustadisplay()"
+                    >
+                      <option disabled selected>Selecione o parlamentar</option>
+                      {% for titular in titulares %}
+                      <option value="{{titular.id}}">
+                        {{titular.categoria_id|adiciona_categoria}}
+                        {{titular.nome}}
+                      </option>
+                      {% endfor %}
+                      <option>Não listado</option>
+                    </select>
+                  </div>
+                  <div
+                    id="authsugesttit"
+                    class="row mt-2 form-dep d-flex justify-content-center align-items-start d-none"
+                  >
+                    <div
+                      class="col-10 d-flex justify-content-center align-items-center alert alert-danger"
+                    >
+                      Titular não encontrado
+                    </div>
+                    <div class="col-1 mt-2">
+                      <button
+                        type="button"
+                        class="btn btn-warning py-1"
+                        onclick="adicionaTitModel()"
+                      >
+                        <i class="fs-4 bi bi-person-fill-add"></i>
+                      </button>
+                    </div>
+                  </div>
+                  {% comment %} LINHA QUE DEFINE O CADASTRO DE ASSESSORES
+                  {%endcomment %}
+                  <div
+                    id="adicionadorTitModel"
+                    class="row form-dep py-0 d-none"
+                    style="background: #e7edef"
+                  >
+                    <div class="col-lg-12 py-2">
+                      <label for="categoriaDepAss" class="form-label"
+                        >Categoria</label
+                      >
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-primary rounded-circle mb-2"
+                        onclick="addCatModel('assessor')"
+                      >
+                        <i class="bi bi-plus-lg"></i>
+                      </button>
+                      <select
+                        class="form-select"
+                        aria-label="Default select"
+                        id="categoriaDepAss"
+                        name="opcaoCat"
+                      >
+                        <option disabled selected>Selecione a categoria</option>
+                        {% for categoria in categorias %}
+                        <option value="{{categoria.nome}}">
+                          {{categoria.nome}}
+                        </option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-lg-12 d-none" id="divathinlinecat">
+                      <input
+                        type="text"
+                        class="form-control py-2"
+                        id="athinlinecat"
+                        style="padding-bottom: 10%"
+                        name="athinlinecat"
+                      />
+                    </div>
+                    <div class="col-lg-12 py-2">
+                      <label for="authassnametit" class="form-label"
+                        >Nome do Titular</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control py-2"
+                        id="authassnametit"
+                        style="padding-bottom: 10%"
+                        name="authassnametit"
+                      />
+                    </div>
+                  </div>
+                  <div class="py-2">
+                    <label for="authnameAss2" class="form-label"
+                      >Nome do Assessor</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="authnameAss2"
+                      name="authnameAss2"
+                    />
+                  </div>
+                  <input
+                    type="hidden"
+                    name="authasschatid"
+                    id="authasschatid"
+                    value=""
+                  />
+                </div>
+
+                <!-- INICIO DO DDD E TELEFONE -->
+                <div class="row form-dep py-0">
+                  <div class="py-2 col-2">
+                    <label for="dddautass" class="form-label">DDD</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dddautass"
+                      name="dddautass"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="changeFoco(this)"
+                      maxlength="2"
+                    />
+                  </div>
+                  <div class="py-2 col-10">
+                    <label for="telefautass" class="form-label">Telefone</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telefautass"
+                      name="telefautass"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="formatarNumero(this)"
+                      maxlength="10"
+                    />
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary text-light">
+                    Salvar
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- INICIO DA TABELA DE APROVAÇÃO DE DISPARADORES -->
+    <div class="table-responsive">
+    <table class="table table-light table-striped unvisto" id="authidListDisp">
+        <thead class="table-warning">
+          <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Email</th>
+              <th scope="col">Telefone</th>
+              <th scope="col"></th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for disparador in disparadores_auth %}
+          <tr>
+              <td class="text-center">{{disparador.first_name}} {{disparador.last_name}}</td>
+              <td>{{disparador.username}}</td>
+              <td>{{disparador.email}}</td>
+              {% if  disparador.telfnumber %}
+              <td>({{disparador.ddd}}) {{disparador.telfnumber}}</td>
+              {% else %}
+              <td>Não Cadastrado</td>
+              {% endif %}
+              <td>
+                  <form method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="iddisp" value="{{disparador.id}}">
+                      <button type="submit" class="btn btn-primary m-2 btn-manag" formaction="{% url 'auth_aceita_disparador' %}" onclick="return confirm('Realmente deseja incluir o disparador?')">
+                          <i class="bi bi-hand-thumbs-up"></i>
+                      </button>
+                      <button type="submit" class="btn btn-danger m-2 btn-manag" formaction="{% url 'auth_deleta_disparador' %}" onclick="return confirm('Realmente não aprova o disparador?')">
+                          <i class="fs-6 bi bi-hand-thumbs-down-fill"></i>
+                      </button>
+                  </form>
+              </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+  <nav class="bg-ligth unvisto" id="idAuthDispNav">
+    <ul class="pagination d-flex">
+      {% if disparadores_auth.has_previous %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_disparador_auth={{disparadores_auth.previous_page_number}}&tabela=titular"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% endif %} 
+      {% for num in disparadores_auth.paginator.page_range %} 
+      {% if num == disparadores_auth.number %}
+      <li class="page-item active">
+        <a class="page-link" href="#">{{num}}</a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_disparador_auth={{num}}&tabela=titular"
+          >{{num}}</a
+        >
+      </li>
+      {% endif %} 
+      {% endfor %} 
+      {% if disparadores_auth.has_next %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'add_authorization' %}?page_disparador_auth={{disparadores_auth.next_page_number}}&tabela=titular"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- FIM NUMERAÇÃO DE PAGINAS -->
+    <!--FIM LIST2-->
+    <!-- MODAL ASSESSORES -->
+
+    <!-- FIM DA TABELA DE APROVAÇÃO DE DISPARADORES -->
+  </div>
+</div>
+
+{% endblock %} {% block mscripts %}
+<script src="{% static 'cadastrar/js/script.js' %}"></script>
+<script>
+  function resetmodeltit() {
+    console.log(" Resetando o model de titulares");
+
+    selectdisplay();
+  }
+
+  function addCatModel(classific) {
+    // Função que faz aparecer ou esconde o formulário de cadastro de categorias
+    let divAddCat;
+    let addcategtit;
+
+    if (classific == "assessor") {
+      console.log("Adicionando categoria para assessor");
+      divAddCat = document.querySelector("#divathinlinecat");
+      addcategtit = document.querySelector("#categoriaDepAss");
+    } else {
+      divAddCat = document.querySelector("#divlastaddtit");
+      addcategtit = document.querySelector("#addcategtit");
+    }
+
+    divAddCat.classList.toggle("d-none");
+    addcategtit.classList.toggle("d-none");
+  }
+
+  function addTitModel() {
+    // Função que faz aparecer ou esconde o formulário de cadastro de titulares
+    const divAddTit = document.querySelector("#addtitnotfind");
+    divAddTit.classList.toggle("d-none");
+  }
+  function selectdisplay() {
+    // Sempre que um componente é modificado ele verifica os outros displays das models
+    const authdeprep = document.querySelector("#titularfinded");
+    const divAddTit = document.querySelector("#titularnotfinded1");
+    const boxcateg = document.querySelector("#addtitnotfind");
+
+    if (
+      authdeprep.value == "Não listado" ||
+      authdeprep.value == "" ||
+      authdeprep.value == "Selecione o parlamentar"
+    ) {
+      console.log("Foi selecionado algo");
+      divAddTit.classList.remove("d-none");
+      boxcateg.classList.add("d-none");
+      // Verificar se existe a categoria em select
+    } else {
+      console.log("Seleção vazia");
+      divAddTit.classList.add("d-none");
+    }
+  }
+  // Função para formatar o número do telefone
+  function changeFoco(element) {
+    if (element["id"] == "dddtit") {
+      if (element.value.length == element.maxLength) {
+        document.getElementById("telefonetit").focus();
+      }
+    } else if (element["id"] == "dddautass") {
+      if (element.value.length == element.maxLength) {
+        document.getElementById("telefautass").focus();
+      }
+    }
+  }
+
+  // Função para selecionar o formulário a ser apresentado na autorização de cadastro
+
+  const checkboxauth = document.querySelectorAll(".list-authorization-main");
+  const authDep = document.querySelector("#idAuthDep");
+  const authidListAss = document.querySelector("#authidListAss");
+  const authidListDisp = document.querySelector("#authidListDisp");
+  const authDepNav = document.querySelector("#idAuthTitNav");
+  const authidListAssNav = document.querySelector("#idAuthAssNav");
+  const authidListDispNav = document.querySelector("#idAuthDispNav");
+
+  for (var i = 0; i < checkboxauth.length; i++) {
+    checkboxauth[i].addEventListener("click", function (e) {
+      if (
+        e.target.innerText === "TITULAR" &&
+        authDep.classList.contains("unvisto")
+      ) {
+        setUnvisto(authDep, "add");
+        setUnvisto(authDepNav, "add");
+        setUnvisto(authidListAss, "remover");
+        setUnvisto(authidListAssNav, "remover");
+        setUnvisto(authidListDisp, "remover");
+        setUnvisto(authidListDispNav, "remover");
+        updateUrlParam("tabela", "titular");
+      }
+      if (
+        e.target.innerText === "ASSESSOR" &&
+        authidListAss.classList.contains("unvisto")
+        ) {
+          setUnvisto(authDep, "remover");
+          setUnvisto(authDepNav, "remover");
+          setUnvisto(authidListDisp, "remover");
+          setUnvisto(authidListDispNav, "remover");
+          setUnvisto(authidListAss, "add");
+          setUnvisto(authidListAssNav, "add");
+          updateUrlParam("tabela", "assessor");
+        }
+        if (
+          e.target.innerText === "USUARIO" &&
+          authidListDisp.classList.contains("unvisto")
+          ) {
+            setUnvisto(authidListDisp, "add");
+            setUnvisto(authidListDispNav, "add");
+            setUnvisto(authDep, "remover");
+            setUnvisto(authDepNav, "remover");
+            setUnvisto(authidListAss, "remover");
+            setUnvisto(authidListAssNav, "remover");
+            updateUrlParam("tabela", "disparador");
+          }
+    });
+  }
+  function checkCurrentTable_auth() {
+
+    let url = new URL(window.location.href);
+    let currentTable_auth = url.searchParams.get("tabela");
+    let titularCheckbox_auth = document.getElementById("depsauth");
+    let assessorCheckbox_auth = document.getElementById("acessauth");
+    let viaturaCheckbox_auth = document.getElementById("dispauth");
+
+    if (currentTable_auth == "titular") {
+      titularCheckbox_auth.checked = true;
+      setUnvisto(authDep, "add");
+      setUnvisto(authDepNav, "add");
+      setUnvisto(authidListAss, "remover");
+      setUnvisto(authidListAssNav, "remover");
+      setUnvisto(authidListDisp, "remover");
+      setUnvisto(authidListDispNav, "remover");
+    } else if (currentTable_auth == "assessor") {
+      assessorCheckbox_auth.checked = true;
+      setUnvisto(authDep, "remover");
+      setUnvisto(authDepNav, "remover");
+      setUnvisto(authidListDisp, "remover");
+      setUnvisto(authidListDispNav, "remover");
+      setUnvisto(authidListAss, "add");
+      setUnvisto(authidListAssNav, "add");
+    } else if (currentTable_auth == "disparador") {
+      viaturaCheckbox_auth.checked = true;
+      setUnvisto(authidListDisp, "add");
+      setUnvisto(authidListDispNav, "add");
+      setUnvisto(authDep, "remover");
+      setUnvisto(authDepNav, "remover");
+      setUnvisto(authidListAss, "remover");
+      setUnvisto(authidListAssNav, "remover");
+    }
+  }
+  checkCurrentTable_auth();
+
+</script>
+{% endblock %}

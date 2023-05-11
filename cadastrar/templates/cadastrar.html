@@ -1,0 +1,360 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Cadastro
+{%endblock%} {% block estilo %}
+<link rel="stylesheet" href="{% static 'cadastrar/css/style.css' %}" />
+{%endblock %} {% block content %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %} {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %} {% endif %}
+  <div class="container nav_tabs">
+    <ul class="d-flex  mt-4">
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="deps" checked />
+        <label for="deps" class="main-label depsvit-main">TITULAR</label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="acess" />
+        <label for="acess" class="main-label depsvit-main">ASSESSOR</label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="viat" />
+        <label for="viat" class="main-label depsvit-main">VIATURA</label>
+      </li>
+    </ul>
+    <!--FORM1-->
+    <form
+      id="idFormDep"
+      class="bg-white p-1"
+      method="post"
+      action="{% url 'processar_titular' %}"
+    >
+      {% csrf_token %}
+      <div class="container">
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2">
+            <div class="d-flex align-items-center justify-content-start">
+              <label for="categoriaDep" class="form-label me-2">Categoria</label>
+              <a
+                href="#"
+                class="btn btn-sm btn-primary rounded-circle mb-2"
+                data-bs-toggle="modal"
+                data-bs-target="#addCateg"
+              >
+                <i class="bi bi-plus-lg"></i>
+              </a>
+            </div>
+            <select
+              class="filtrado form-select"
+              aria-label="Default select"
+              id="categoriaDep"
+              name="opcaoCat"
+            >
+              <option disabled selected>Selecione a categoria</option>
+              {% for categoria in categorias %}
+              <option value="{{categoria.nome}}">{{categoria.nome}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-lg-6 py-2">
+            <label for="nameDep" class="form-label">Nome do Titular</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameDep"
+              name="nameDep"
+            />
+          </div>
+        </div>
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2">
+            <label for="idDep" class="form-label">ID do Usuario</label>
+            <input type="text" class="form-control" id="idDep" name="idDep" />
+          </div>
+          <div
+            class="form-check form-switch col-lg-6 py-2 d-flex align-items-center justify-content-center"
+          >
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="flexSwitchCheckDefault"
+              name="reInfo"
+            />
+            <label class="form-check-label ms-3" for="flexSwitchCheckDefault"
+              >Apenas o Assessor recebe a informação?</label
+            >
+          </div>
+        </div>
+
+        <div class="row form-dep py-0 d-flex justify-content-start">
+          <div class="col-3 col-lg-1 py-2">
+            <label for="dddtit" class="form-label">DDD</label>
+            <input
+              type="text"
+              class="form-control me-2"
+              id="dddtit"
+              maxlength="2"
+              name="dddtit"
+              onkeypress="return somenteNumeros(event)"
+              oninput="mudarFoco(this)"
+            />
+          </div>
+          <div class="w-100 d-block d-sm-none"></div>
+          <div class="col-8 col-lg-5 py-2">
+            <label for="telefonetit" class="form-label">Telefone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telefonetit"
+              name="telefonetit"
+              maxlength="10"
+              onkeypress="return somenteNumeros(event)"
+              oninput="formatarNumero(this)"
+            />
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <button type="submit" class="btn btn-primary classico mb-3 my-4 p-2">
+            Cadastrar
+          </button>
+        </div>
+      </div>
+    </form>
+    <!--FORM2-->
+    <form
+      id="idFormAss"
+      class="bg-white p-1 unvisto"
+      method="post"
+      action="{% url 'processar_assessor' %}"
+    >
+      {% csrf_token %}
+      <div class="container">
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2 d-flex flex-column">
+            <label for="depRep" class="form-label">Titular Representado</label>
+            <select
+              class="form-select filtrado"
+              aria-label="Default select"
+              id="depRep"
+              name="depRep"
+            >
+              <option disabled selected>Selecione o titular</option>
+              {% for titular in titulares %}
+              <option value="{{titular.id}}">
+                {{titular.categoria}} {{titular.nome}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-lg-6 py-2">
+            <label for="nameAss" class="form-label">Nome do Assessor</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nameAss"
+              name="nameAss"
+            />
+          </div>
+        </div>
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2">
+            <label for="idAss" class="form-label">ID do Assessor</label>
+            <input type="text" class="form-control" id="idAss" name="idAss" />
+          </div>
+
+          <div class="col-3 col-lg-1 py-2">
+            <label for="dddass" class="form-label">DDD</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dddass"
+              maxlength="2"
+              name="dddass"
+              style="min-width: 50px"
+              onkeypress="return somenteNumeros(event)"
+              oninput="mudarFoco(this)"
+            />
+          </div>
+          <div class="col-8 col-lg-5 py-2">
+            <label for="telefoneass" class="form-label">Telefone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="telefoneass"
+              name="telefoneass"
+              maxlength="10"
+              onkeypress="return somenteNumeros(event)"
+              oninput="formatarNumero(this)"
+            />
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <button type="submit" class="btn btn-primary classico mb-3 my-4 p-2">
+            Cadastrar
+          </button>
+        </div>
+      </div>
+    </form>
+    <!--FORM3-->
+    <form
+      id="idFormVit"
+      class="bg-white p-2 unvisto"
+      method="post"
+      action="{% url 'processar_viatura' %}"
+    >
+      {% csrf_token %}
+      <div class="container">
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2 d-flex flex-column">
+            <label for="tipoVit" class="form-label">Tipo</label>
+            <select
+              class="filtrado form-select w-100"
+              aria-label="Default select"
+              id="tipoVit"
+              name="tipoVit"
+            >
+              <option disabled selected>Selecione o tipo de viatura</option>
+              {% for viatura in viaturas_l %}
+              <option value="{{viatura.ind}}">{{viatura.vtr}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-lg-6 py-2">
+            <label for="placaVit" class="form-label">Placa</label>
+            <input
+              type="text"
+              class="form-control"
+              id="placaVit"
+              name="placaVit"
+              maxlength="7"
+            />
+          </div>
+        </div>
+        <div class="row form-dep py-0">
+          <div class="col-lg-6 py-2 d-flex flex-column">
+            <label for="tipoDep" class="form-label">Titular</label>
+            <select
+              class="filtrado form-select"
+              aria-label="Default select"
+              id="tipoDep"
+              name="tipoDep"
+            >
+              <option disabled selected>Selecione o titular</option>
+              {% for titular in titulares %}
+              <option value="{{titular.id}}">
+                {{titular.categoria}} {{titular.nome}}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <button type="submit" class="btn btn-primary classico mb-3 my-4 p-2">
+            Cadastrar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- MODAL CATEGORIAS -->
+<div
+  class="modal fade"
+  id="addCateg"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6
+          class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+          id="exampleModalLabel"
+        >
+          Adicionar Categoria
+        </h6>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <!-- FORMULARIO DE ADIÇÃO DE CATEGORIAS -->
+        <form
+          id="idCatForm"
+          class="bg-white p-1"
+          method="post"
+          action="{% url 'add_categoria' %}"
+        >
+          {% csrf_token %}
+          <div class="container">
+            <div class="row form-dep py-0">
+              <div class="py-2">
+                <label for="nomeCat" class="form-label">Categoria</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nomeCat2"
+                  name="nomeCat2"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Cadastrar</button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </form>
+        <!-- FORMULARIO DE ADIÇÃO DE CATEGORIAS -->
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Função para selecionar o formulário a ser apresentado no cadastro
+
+const checkbox1 = document.querySelectorAll(".depsvit-main");
+const formdep = document.querySelector("#idFormDep");
+const formVit = document.querySelector("#idFormVit");
+const formAss = document.querySelector("#idFormAss");
+
+for (var i = 0; i < checkbox1.length ; i++) {
+  checkbox1[i].addEventListener('click', function(e) {
+      if(e.target.innerText === "TITULAR" && formdep.classList.contains("unvisto")){
+          setUnvisto(formdep,'add')
+          setUnvisto(formVit,'remover')
+          setUnvisto(formAss,'remover')
+      }
+      
+      if(e.target.innerText === "ASSESSOR" && formAss.classList.contains("unvisto")){
+          setUnvisto(formdep,'remover')
+          setUnvisto(formVit,'remover')
+          setUnvisto(formAss,'add')
+      }
+      
+      if(e.target.innerText === "VIATURA" && formVit.classList.contains("unvisto")){
+          setUnvisto(formdep,'remover')
+          setUnvisto(formVit,'add')
+          setUnvisto(formAss,'remover')
+      }
+
+  }
+  );
+}
+
+</script>
+{% endblock %} {% block mscripts %}
+
+<script src="{% static 'cadastrar/js/script.js' %}"></script>
+{% endblock %}

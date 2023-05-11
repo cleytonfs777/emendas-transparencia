@@ -1,0 +1,250 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Lista Disparador
+{%endblock%} {% block content %} {% block estilo %}
+<link rel="stylesheet" href="{% static 'conteudo/css/style.css' %}" />
+{% endblock %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %} {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %} {% endif %}
+  <div class="table-responsive">
+    <div class="container titulo-main d-flex justify-content-center rounded-top">
+    <h3 class="text-light fw-bold m-2">USUARIOS</h3>
+  </div>
+    <table class="table table-light table-striped">
+      <thead class="table-warning">
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Sobrenome</th>
+          <th scope="col">Usuário</th>
+          <th scope="col">E-mail</th>
+          <th scope="col">Ultimo login</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for disparador in disparadores %}
+        <tr>
+          <td style="text-align: center">{{disparador.first_name}}</td>
+          <td>{{disparador.last_name}}</td>
+          <td>{{disparador.username}}</td>
+          <td>{{disparador.email}}</td>
+          {% if not disparador.last_login %}
+          <td>Primeiro acesso</td>
+          {% else %}
+          <td>{{disparador.last_login}}</td>
+          {% endif %}
+          <td>
+            <a
+              href="#"
+              class="btn btn-success m-2 btn-manag edit-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editDisparador"
+              data-bs-whateverdisp="{{disparador.id}}"
+              data-bs-whateverfn="{{disparador.first_name}}"
+              data-bs-whateverln="{{disparador.last_name}}"
+              data-bs-whateverDUser="{{disparador.username}}"
+              data-bs-whateverDEmail="{{disparador.email}}"
+              ><i class="bi bi-pencil-square"></i
+            ></a>
+            <a
+              href="{% url 'exluir_disparador' disparador.id %}"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir o Disparador {{disparador.username}}?')"
+              ><i class="bi bi-trash3"></i
+            ></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- INICIO PAGINAÇÃO -->
+  <nav class="bg-ligth" id="idDispNav">
+    <ul class="pagination d-flex">
+      {% if disparadores.has_previous %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'listar_disparador' %}?page_disparador={{disparadores.previous_page_number}}&tabela=disparador"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&laquo;</span></a
+        >
+      </li>
+      {% endif %} 
+      {% for num in disparadores.paginator.page_range %} 
+      {% if num == disparadores.number %}
+      <li class="page-item active">
+        <a class="page-link" href="#">{{num}}</a>
+      </li>
+      {% else %}
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="{% url 'listar_disparador' %}?page_disparador={{num}}&tabela=disparador"
+          >{{num}}</a
+        >
+      </li>
+      {% endif %} 
+      {% endfor %} 
+      {% if disparadores.has_next %}
+      <li class="page-item">
+      <a
+          class="page-link"
+          href="{% url 'listar_disparador' %}?page_disparador={{disparadores.next_page_number}}&tabela=disparador"
+          tabindex="-1"
+          aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% else %}
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+          ><span aria-hidden="true">&raquo;</span></a
+        >
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  <!-- FIM PAGINAÇÃO -->
+  <!-- MODAL DISPARADORES -->
+  <div
+    class="modal fade"
+    id="editDisparador"
+    tabindex="-1"
+    aria-labelledby="labelDisparador"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h6
+            class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+            id="labelDisparador"
+          >
+            Editar dados do Disparador
+          </h6>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <!-- FORMULARIO DE EDIÇÃO PARA DISPARADORES -->
+          <form
+            action="#"
+            id="idFormDisp"
+            class="bg-white p-1"
+            method="post"
+            data-action="{% url 'editar_disparador' 00 %}"
+          >
+            {% csrf_token %}
+            <div class="container">
+              <div class="row form-dep py-0">
+                <div class="py-2">
+                  <label for="dispNome" class="form-label">Nome</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dispNome"
+                    name="dispNome"
+                  />
+                </div>
+                <div class="py-2">
+                  <label for="dispSobrenome" class="form-label"
+                    >Sobrenome</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dispSobrenome"
+                    name="dispSobrenome"
+                  />
+                </div>
+              </div>
+              <div class="row form-dep py-0">
+                <div class="py-2">
+                  <label for="dispUsuario" class="form-label">Usuario</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dispUsuario"
+                    name="dispUsuario"
+                  />
+                </div>
+                <div class="py-2">
+                  <label for="dispEmail" class="form-label">Email</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="dispEmail"
+                    name="dispEmail"
+                  />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </form>
+          <!-- FORMULARIO DE EDIÇÃO PARA DISPARADORES -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // FUNÇÃO RESPONSAVEL POR CONTROLAR O CARREGAMENTO DOS DADOS PARA EDIÇÃO - DISPARADOR
+
+    const disparadorModal = document.getElementById("editDisparador");
+    disparadorModal.addEventListener("show.bs.modal", function (event) {
+      // Button that triggered the modal
+      const button = event.relatedTarget;
+      // Extract info from data-bs-* attributes
+      const idDisp = button.getAttribute("data-bs-whateverdisp");
+      const fnDisp = button.getAttribute("data-bs-whateverfn");
+      const lnDisp = button.getAttribute("data-bs-whateverln");
+      const unDisp = button.getAttribute("data-bs-whateverDUser");
+      const emDisp = button.getAttribute("data-bs-whateverDEmail");
+      const keyDisp = button.getAttribute("data-bs-whateverDEmail");
+
+      // Atualizando campos do meu model deputado
+      const modalTitle = disparadorModal.querySelector(".modal-title");
+      const modalfnDisp = document.querySelector("#dispNome");
+      const modallnDisp = document.querySelector("#dispSobrenome");
+      const modalunDisp = document.querySelector("#dispUsuario");
+      const modalemDisp = document.querySelector("#dispEmail");
+      const modalkeyDisp = document.querySelector("#dispSenha");
+      const modalForm33 = document.querySelector("#idFormDisp");
+      console.log("All rigth");
+
+      modalTitle.textContent = "Editar dados da Viatura " + fnDisp;
+      modalfnDisp.value = fnDisp;
+      modallnDisp.value = lnDisp;
+      modalunDisp.value = unDisp;
+      modalemDisp.value = emDisp;
+      let url = modalForm33.getAttribute("data-action");
+      console.log(url);
+      url = url.replace("0", idDisp);
+      console.log(idDisp);
+      console.log(url);
+      modalForm33.setAttribute("action", url);
+    });
+  </script>
+  {% endblock %}
+</div>

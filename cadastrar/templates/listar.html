@@ -1,0 +1,912 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Cadastro
+{%endblock%} {% block estilo %}
+<link rel="stylesheet" href="{% static 'cadastrar/css/style.css' %}" />
+
+{%endblock %} {% block content %}
+
+
+<div class="container container-cad" id="main-container">
+  {% if messages %} {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %} {% endif %}
+  <!-- Filtros Viatura Inicio-->
+  <div class="row d-flex flex-row">
+    <div class="col">
+      <!-- Formulario para filtrar Titulares-->
+      <form method="GET" id="form-filter-titular" class="d-flex flex-md-row flex-column mt-2 justify-content-around align-itens-center">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchnometit" name="search_nome_tit" value="{{ search_nome_tit|default:'' }}" placeholder="Nome">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchcategoriatit" name="search_categoria_tit" value="{{ search_categoria_tit|default:'' }}" placeholder="Categoria">
+        <input type="hidden" name="tabela" class="tabela-filter-all" id="tabela-filter-titular" value="{{ tabela }}">
+        <button type="submit" class="btn btn-primary m-2"><i class="bi bi-search"></i></button>
+      </form>
+      <!-- Formulario para filtrar Assessores-->
+      <form method="GET" id="form-filter-assessor" class="d-flex flex-md-row flex-column mt-2 justify-content-around align-itens-center hidden-filter">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchnomeass" name="search_nome_ass" value="{{ search_nome_ass|default:'' }}" placeholder="Nome">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchtitularass" name="search_titular_ass" value="{{ search_titular_ass|default:'' }}" placeholder="Titular">
+        <input type="hidden" name="tabela" class="tabela-filter-all" id="tabela-filter-assessor" value="{{ tabela }}">
+        <button type="submit" class="btn btn-primary m-2"><i class="bi bi-search"></i></button>
+      </form>
+      <!-- Formulario para filtrar Viaturas-->
+      <form method="GET" id="form-filter-viatura" class="d-flex flex-md-row flex-column mt-2 justify-content-around align-itens-center hidden-filter">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchTipo" name="search_tipo" value="{{ search_tipo|default:'' }}" placeholder="Tipo">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchplaca" name="search_placa" value="{{ search_placa|default:'' }}" placeholder="Placa">
+        <input type="text" class="form-control m-2 p-2 filter-all" id="searchTitular" name="search_titular" value="{{ search_titular|default:'' }}" placeholder="Titular">
+        <input type="hidden" name="tabela" class="tabela-filter-all" id="tabela-filter-viatura" value="{{ tabela }}">
+        <button type="submit" class="btn btn-primary m-2"><i class="bi bi-search"></i></button>
+      </form>
+    </div>
+  </div>
+  <!-- Filtros Viatura Fim-->
+  <div class="container nav_tabs table-responsive">
+    <ul class="d-flex" onclick="setTable();clearFilter();">
+      <li class="tab-item flex-grow-1" >
+        <input type="radio" name="tabs" class="rd_tabs" id="deps" checked />
+        <label
+          for="deps"
+          class="main-label list-depsvit-main d-flex justify-content-center"
+          
+        >
+        
+          <h6>TITULAR</h6>
+          <span class="badge badge-warning bg-success mx-2"
+            >{{titulares.paginator.count}}</span
+          >
+        </label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="acess" />
+        <label
+          for="acess"
+          class="main-label list-depsvit-main d-flex justify-content-center"
+          
+        >
+          <h6>ASSESSOR</h6>
+          <span class="badge badge-warning bg-success mx-2"
+            >{{assessores.paginator.count}}</span
+          >
+        </label>
+      </li>
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs" id="viat" />
+        <label
+          for="viat"
+          class="main-label list-depsvit-main d-flex justify-content-center"
+          
+        >
+          <h6>VIATURA</h6>
+          <span class="badge badge-warning bg-success mx-2"
+            >{{viaturas.paginator.count}}</span
+          >
+        </label>
+      </li>
+    </ul>
+    <!--LIST1-->
+    <div class="table-responsive">
+    <table class="table table-light table-striped" id="idListDep">
+      <thead class="table-warning">
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Telefone</th>
+          <th scope="col">Recebe msg</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for titular in titulares %}
+        <tr>
+          <td style="text-align: center">{{titular.nome}}</td>
+          <td>{{titular.categoria}}</td>
+          {% if titular.telfnumber %}
+          <td>({{titular.ddd}}) {{titular.telfnumber}}</td>
+          {% else %}
+          <td>Não cadastrado</td>
+          {% endif %} {% if titular.only_assec == True %}
+          <td>Não</td>
+          {% elif titular.only_assec == False%}
+          <td>Sim</td>
+          {% endif %}
+          <td>
+            <a
+              href="#"
+              class="btn btn-primary m-2 btn-manag edit-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editTitular"
+              data-bs-whatever="{{titular.id}}"
+              data-bs-whatevernamDep="{{titular.nome}}"
+              data-bs-whatevercatDep="{{titular.categoria}}"
+              data-bs-whateverddd="{{titular.ddd}}"
+              data-bs-whatevertelfnumber="{{titular.telfnumber}}"
+              data-bs-whateverRecMsgDep="{{titular.only_assec}}"
+              data-bs-whateveridtelegtit="{{titular.id_chat_d}}"
+              ><i class="bi bi-pencil-square"></i
+            ></a>
+
+            <a
+              href="{% url 'deleta_titular' titular.id %}?page_titular={{ titulares.number|default:'1' }}&tabela=titular"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir o titular {{titular.nome}}?')"
+              ><i class="bi bi-trash3"></i
+            ></a>
+            {% if titular.id_chat_d %}
+            <i class="bi bi-circle-fill text-success"></i>
+            {% else %}
+            <i class="bi bi-circle-fill text-secondary"></i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+    <nav class="bg-ligth" id="idListDepNav">
+      <ul class="pagination d-flex">
+        {% if titulares.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_titular={{titulares.previous_page_number}}&tabela=titular"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% endif %} 
+        {% for num in titulares.paginator.page_range %} 
+        {% if num == titulares.number %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_titular={{num}}&tabela=titular"
+            >{{num}}</a
+          >
+        </li>
+        {% endif %} 
+        {% endfor %} 
+        {% if titulares.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_titular={{titulares.next_page_number}}&tabela=titular"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!-- FIM NUMERAÇÃO DE PAGINAS -->
+    <!-- MODAL TITULARES -->
+    <div
+      class="modal fade"
+      id="editTitular"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="exampleModalLabel"
+            >
+              Editar dados do titular
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA TITULARES -->
+            <form
+              id="idFormDep2"
+              class="bg-white p-1"
+              method="post"
+              data-action="{% url 'editar_titular' 00 %}?page_titular={{ titulares.number|default:'1' }}&tabela=titular"
+            >
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="categoriaDep2"
+                      name="categoria"
+                    >
+                      <option disabled selected>
+                        Selecione a categoria do titular
+                      </option>
+                      {% for categoria in categorias %}
+                      <option value="{{categoria.nome}}">
+                        {{categoria.nome}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="py-2">
+                    <label for="nameDep2" class="form-label"
+                      >Nome do Titular</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nameDep2"
+                      name="nome"
+                    />
+                  </div>
+                  <div class="py-2">
+                    <label for="idtelegtit" class="form-label"
+                      >Id do Titular</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="idtelegtit"
+                      name="idtelegtit"
+                    />
+                  </div>
+                </div>
+                <div class="row form-dep py-0">
+                  <div class="py-2 col-2">
+                    <label for="dddmodaltit" class="form-label">DDD</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dddmodaltit"
+                      name="dddmodaltit"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="mudarFoco(this)"
+                      maxlength="2"
+                    />
+                  </div>
+                  <div class="py-2 col-10">
+                    <label for="telefmodaltit" class="form-label"
+                      >Telefone</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telefmodaltit"
+                      name="telefmodaltit"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="formatarNumero(this)"
+                      maxlength="10"
+                    />
+                  </div>
+                  <div
+                    class="form-check form-switch py-2 d-flex align-items-center justify-content-center"
+                  >
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="flexSwitchCheckDefault2"
+                      name="only_assec"
+                    />
+                    <label
+                      class="form-check-label ms-3"
+                      for="flexSwitchCheckDefault"
+                      >Apenas o Assessor recebe a informação?</label
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA TITULARES -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--LIST2 -->
+    <div class="table-responsive">
+    <table class="table table-light table-striped unvisto" id="idListAss">
+      <thead class="table-warning">
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Titular</th>
+          <th scope="col">Telefone</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assessor in assessores %}
+        <tr>
+          <td style="text-align: center">{{assessor.nome_assessor}}</td>
+          <td>{{assessor.titular.categoria}} {{assessor.titular}}</td>
+          {% if assessor.telfnumber %}
+          <td>({{assessor.ddd}}) {{assessor.telfnumber}}</td>
+          {% else %}
+          <td>Não informado</td>
+          {% endif %}
+          <td>
+            <a
+              href="#"
+              class="btn btn-primary m-2 btn-manag edit-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editAssessor"
+              data-bs-whateverAss="{{assessor.id}}"
+              data-bs-whatevernamAss="{{assessor.nome_assessor}}"
+              data-bs-whateveridtelegass="{{assessor.id_chat_a}}"
+              data-bs-whateverdddAss="{{assessor.ddd}}"
+              data-bs-whatevertelfnumberAss="{{assessor.telfnumber}}"
+              data-bs-whateverDepAss="{{assessor.titular.id}}"
+              ><i class="bi bi-pencil-square"></i
+            ></a>
+            <a
+              href="{% url 'deleta_assessor' assessor.id %}?page_assessor={{ assessores.number|default:'1' }}&tabela=assessor"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir o Assessor {{ assessor.nome_assessor }}?')"
+              ><i class="bi bi-trash3"></i
+            ></a>
+            {% if assessor.id_chat_a %}
+            <i class="bi bi-circle-fill text-success"></i>
+            {% else %}
+            <i class="bi bi-circle-fill text-secondary"></i>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+    <nav class="bg-ligth unvisto" id="idListAssNav">
+      <ul class="pagination d-flex">
+        {% if assessores.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_assessor={{assessores.previous_page_number}}&tabela=assessor"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% endif %} 
+        {% for num in assessores.paginator.page_range %} 
+        {% if num == assessores.number %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_assessor={{num}}&tabela=assessor"
+            >{{num}}</a
+          >
+        </li>
+        {% endif %} {% endfor %} {% if assessores.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_assessor={{assessores.next_page_number}}&tabela=assessor"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!--FIM LIST2-->
+    <!-- MODAL ASSESSORES -->
+    <div
+      class="modal fade"
+      id="editAssessor"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="exampleModalLabel"
+            >
+              Editar dados do assessor
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+            <form
+              id="idFormAss2"
+              class="bg-white p-1"
+              method="post"
+              data-action="{% url 'editar_assessor' 00 %}?page_assessor={{ assessores.number|default:'1' }}&tabela=assessor"
+            >
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="depRep" class="form-label"
+                      >Titular Representado</label
+                    >
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="depRep2"
+                      name="depRep2"
+                    >
+                      <option disabled selected>Selecione o parlamentar</option>
+                      {% for titular in titulares_all %}
+                      <option value="{{titular.id}}">
+                        {{titular.categoria}} {{titular.nome}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="py-2">
+                    <label for="nameAss" class="form-label"
+                      >Nome do Assessor</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="nameAss2"
+                      name="nameAss2"
+                    />
+                  </div>
+                </div>
+                <div class="py-2">
+                  <label for="idtelegass" class="form-label"
+                    >Id do Assessor</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="idtelegass"
+                    name="idtelegass"
+                  />
+                </div>
+              </div>
+              <div class="row form-dep py-0">
+                <div class="py-2 col-2">
+                  <label for="dddmodalass" class="form-label">DDD</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="dddmodalass"
+                    name="dddmodalass"
+                    onkeypress="return somenteNumeros(event)"
+                    oninput="mudarFoco(this)"
+                    maxlength="2"
+                  />
+                </div>
+                <div class="py-2 col-10">
+                  <label for="telefmodalass" class="form-label">Telefone</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="telefmodalass"
+                    name="telefmodalass"
+                    onkeypress="return somenteNumeros(event)"
+                    oninput="formatarNumero(this)"
+                    maxlength="10"
+                  />
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  data-bs-dismiss="modal"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--LIST3-->
+    <div class="table-responsive">
+
+    <table class="table table-light table-striped unvisto" id="idListVit">
+      <thead class="table-warning">
+        <tr>
+          <th scope="col">Tipo</th>
+          <th scope="col">Placa</th>
+          <th scope="col">Titular</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for viatura in viaturas %}
+        <tr>
+          <td style="text-align: center">{{viatura.tipo}}</td>
+          <td>{{viatura.placa}}</td>
+          <td>{{viatura.titular.categoria}} {{viatura.titular}}</td>
+          <td>
+            <a
+              href="#"
+              class="btn btn-primary m-2 btn-manag edit-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#editViatura"
+              data-bs-whatevervit="{{viatura.id}}"
+              data-bs-whateverTip="{{viatura.tipo}}"
+              data-bs-whateverPlac="{{viatura.placa}}"
+              data-bs-whateverDepVit="{{viatura.titular.id}}"
+              ><i class="bi bi-pencil-square"></i
+            ></a>
+            <a
+              href="{% url 'deleta_viatura' viatura.id %}?page_viatura={{ viaturas.number|default:'1' }}&tabela=viatura"
+              class="btn btn-danger m-2 btn-manag"
+              onclick="return confirm('Realmente deseja excluir a Viatura {{viatura.placa}}?')"
+              ><i class="bi bi-trash3"></i
+            ></a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    <!-- INICIO NUMERAÇÃO DE PAGINAS -->
+    <nav class="bg-ligth unvisto" id="idListVitNav">
+      <ul class="pagination d-flex">
+        {% if viaturas.has_previous %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_viatura={{viaturas.previous_page_number}}&tabela=viatura&search_titular={{search_titular}}&search_placa={{search_placa}}&search_tipo={{search_tipo}}"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&laquo;</span></a
+          >
+        </li>
+        {% endif %} 
+        {% for num in viaturas.paginator.page_range %} 
+        {% if num == viaturas.number %}
+        <li class="page-item active">
+          <a class="page-link" href="#">{{num}}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_viatura={{num}}&tabela=viatura&search_titular={{search_titular}}&search_placa={{search_placa}}&search_tipo={{search_tipo}}"
+            >{{num}}</a
+          >
+        </li>
+        {% endif %} {% endfor %} {% if viaturas.has_next %}
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="{% url 'listar' %}?page_viatura={{viaturas.next_page_number}}&tabela=viatura&search_titular={{search_titular}}&search_placa={{search_placa}}&search_tipo={{search_tipo}}"
+            tabindex="-1"
+            aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true"
+            ><span aria-hidden="true">&raquo;</span></a
+          >
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    <!-- FIM NUMERAÇÃO DE PAGINAS -->
+    <!-- MODAL VIATURA -->
+    <div
+      class="modal fade"
+      id="editViatura"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6
+              class="modal-title fs-5 fw-bold text-primary-emphasis text-center"
+              id="exampleModalLabel"
+            >
+              Editar dados da Viatura
+            </h6>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA VIATURA -->
+            <form
+              id="idFormVit2"
+              class="bg-white p-2"
+              method="post"
+              data-action="{% url 'editar_viatura' 00 %}?page_viatura={{ viaturas.number|default:'1' }}&tabela=viatura"
+            >
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="tipoVit2" class="form-label">Tipo</label>
+                    <select
+                      class="form-select w-100"
+                      aria-label="Default select"
+                      id="tipoVit2"
+                      name="tipoVit2"
+                    >
+                      <option disabled selected>
+                        Selecione o tipo de viatura
+                      </option>
+                      {% for viatura in viaturas_l %}
+                      <option value="{{viatura.ind}}">{{viatura.vtr}}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="py-2">
+                    <label for="placaVit2" class="form-label">Placa</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="placaVit2"
+                      name="placaVit2"
+                      maxlength="7"
+                    />
+                  </div>
+                </div>
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="tipoDep3" class="form-label">Titular</label>
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="tipoDep3"
+                      name="tipoDep3"
+                    >
+                      <option disabled selected>Selecione o parlamentar</option>
+                      {% for titular in titulares_all %}
+                      <option value="{{titular.id}}">
+                        {{titular.categoria}} {{titular.nome}}
+                      </option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Salvar</button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA VIATURA -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+function filterOper(escolha){
+
+  // Formulario de filtro
+  let filtertitular = document.getElementById("form-filter-titular");
+  let filterassessor = document.getElementById("form-filter-assessor");
+  let filterviatura = document.getElementById("form-filter-viatura");
+
+  if(escolha == 'titular'){
+      filtertitular.classList.remove("hidden-filter");
+      filterassessor.classList.add("hidden-filter");
+      filterviatura.classList.add("hidden-filter");
+  }else if(escolha == 'assessor'){
+      filtertitular.classList.add("hidden-filter");
+      filterassessor.classList.remove("hidden-filter");
+      filterviatura.classList.add("hidden-filter");
+  }else if(escolha == 'viatura') {
+      filtertitular.classList.add("hidden-filter");
+      filterassessor.classList.add("hidden-filter");
+      filterviatura.classList.remove("hidden-filter");
+  }
+  }
+
+function setTable(){
+  let url = new URL(window.location.href);
+  let currentTable = url.searchParams.get("tabela");
+  let currentTitular = url.searchParams.get("page_titular");
+  let currentAssessor = url.searchParams.get("page_assessor");
+  let currentViatura = url.searchParams.get("page_tviatura");
+  console.log(`Tabela atual: ${currentTable}`)
+  filterOper(currentTable)
+  let tabfilter = document.querySelectorAll("input.tabela-filter-all");
+  tabfilter.forEach(elem => {
+      elem.value = currentTable;
+  });
+
+}
+
+function setUnvisto(elemento, act){
+  if(act == 'remover'){
+      if(!(elemento.classList.contains("unvisto"))){
+          elemento.classList.add("unvisto");
+      }
+  }else{
+      if(elemento.classList.contains("unvisto")){
+          elemento.classList.remove("unvisto");
+      }
+  }
+}
+
+// Função que limpa todos os Filtros de pesquisa exeto o input hidden
+function clearFilter(){
+  let filter = document.querySelectorAll("input.filter-all");
+  filter.forEach(elem => {
+      elem.value = "";
+  });
+}
+
+const checkbox2 = document.querySelectorAll("#main-container > div > ul > li > label.main-label");
+const listdep = document.querySelector("#idListDep");
+const listdepnav = document.querySelector("#idListDepNav");
+const listVit = document.querySelector("#idListVit");
+const listVitNav = document.querySelector("#idListVitNav");
+const listAss = document.querySelector("#idListAss");
+const listAssNav = document.querySelector("#idListAssNav");
+
+for (var i = 0; i < checkbox2.length ; i++) {
+  checkbox2[i].addEventListener('click', function(e) {
+      if(e.target.innerText.includes("TITULAR") && listdep.classList.contains("unvisto")){
+          setUnvisto(listdep,'add')
+          setUnvisto(listdepnav,'add')
+          setUnvisto(listVit,'remover')
+          setUnvisto(listVitNav,'remover')
+          setUnvisto(listAss,'remover')
+          setUnvisto(listAssNav,'remover')
+          updateUrlParam("tabela", "titular");
+      }
+      
+      if(e.target.innerText.includes("ASSESSOR") && listAss.classList.contains("unvisto")){
+          setUnvisto(listdep,'remover')
+          setUnvisto(listdepnav,'remover')
+          setUnvisto(listVit,'remover')
+          setUnvisto(listVitNav,'remover')
+          setUnvisto(listAss,'add')
+          setUnvisto(listAssNav,'add')
+          updateUrlParam("tabela", "assessor");
+      }
+      
+      if(e.target.innerText.includes("VIATURA") && listVit.classList.contains("unvisto")){
+          setUnvisto(listdep,'remover')
+          setUnvisto(listdepnav,'remover')
+          setUnvisto(listVit,'add')
+          setUnvisto(listVitNav,'add')
+          setUnvisto(listAss,'remover')
+          setUnvisto(listAssNav,'remover')
+          updateUrlParam("tabela", "viatura");
+      }
+
+  }
+  );
+}
+
+
+  // Função para verificar a tabela atual na URL e exibi-la
+  function checkCurrentTable() {
+    let url = new URL(window.location.href);
+    let currentTable = url.searchParams.get("tabela");
+    let titularCheckbox = document.getElementById("deps");
+    let assessorCheckbox = document.getElementById("acess");
+    let viaturaCheckbox = document.getElementById("viat");
+    setTable()
+    filterOper(currentTable)
+    switch (currentTable) {
+        case "titular":
+            titularCheckbox.checked = true;
+            setUnvisto(listdep,'add');
+            setUnvisto(listdepnav,'add');
+            setUnvisto(listVit,'remover');
+            setUnvisto(listVitNav,'remover');
+            setUnvisto(listAss,'remover');
+            setUnvisto(listAssNav,'remover');
+            break;
+            case "assessor":
+            assessorCheckbox.checked = true;
+            setUnvisto(listdep,'remover');
+            setUnvisto(listdepnav,'remover');
+            setUnvisto(listVit,'remover');
+            setUnvisto(listVitNav,'remover');
+            setUnvisto(listAss,'add');
+            setUnvisto(listAssNav,'add');
+            break;
+            case "viatura":
+            viaturaCheckbox.checked = true;
+            setUnvisto(listdep,'remover');
+            setUnvisto(listdepnav,'remover');
+            setUnvisto(listVit,'add');
+            setUnvisto(listVitNav,'add');
+            setUnvisto(listAss,'remover');
+            setUnvisto(listAssNav,'remover');
+            break;
+        default:
+            titularCheckbox.checked = true;
+            setUnvisto(listdep,'add');
+            setUnvisto(listdepnav,'add');
+            setUnvisto(listVit,'remover');
+            setUnvisto(listVitNav,'remover');
+            setUnvisto(listAss,'remover');
+            setUnvisto(listAssNav,'remover');
+          }
+        }
+        
+        // Verifique a tabela atual na URL e exiba-a
+        checkCurrentTable();
+        
+</script>
+
+{% endblock %}
+{% block mscripts %}
+<script src="{% static 'cadastrar/js/script.js' %}"></script>
+{% comment %} <script src="{% static 'cadastrar/js/filter.js' %}"></script> {% endcomment %}
+{% endblock %}

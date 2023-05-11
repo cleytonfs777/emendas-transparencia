@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Confirmação
+{%endblock%} 
+{% block estilo %}
+<link rel="stylesheet" href="{% static 'disparo/css/envio.css' %}" />
+<style>
+  .chat-container {
+    background-image: url("{% static 'conteudo/img/fundo_telegram.png' %}");
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+</style>
+{% endblock%} 
+{% block content %}
+
+<!-- Indicador de carregamento -->
+<div id="loading-indicator" style="display: none;">
+  <div id="main-loading">
+    <div class="c-loader"></div>
+    <p id="loading-text">Enviando mensagens  <i class="bi bi-telegram"></i></p>
+  </div>
+</div>
+<!-- Indicador de carregamento -->
+
+<div class="container container-cad" id="main-container">
+  <div class="chat-container">
+    <div class="chat-header">
+        <p>TELEGRAM</p>
+        <span class="material-icons"><i class="bi bi-telegram"></i></span>
+    </div>
+    <div class="chat-messages">
+        {% for mess in mensagem %}
+          {% for mess_u in mess.msg_a %}
+            <p>{{mess_u}}</p>
+          {% endfor %}
+          {% for image_url in mess.rec_image %}
+            <p><img src="{{ image_url }}" alt="{{ image_url }}" width="100%" heigth="100%"></p>
+          {% endfor %}
+          <hr>
+        {% endfor %}
+    </div>
+    <div class="chat-input">
+        <button onclick="confirmar()">Enviar</button>
+        <button onclick="cancelar()">Cancelar</button>
+    </div>
+  </div>
+  <img src="{{ rec_image.imagem.url }}" alt="{{ rec_image.imagem.name }}">
+
+  <form method="POST" action="{% url 'enviar_disparo' %}" id="form_confirmar" onsubmit="showLoadingIndicator()" style="display:none;">
+      {% csrf_token %}
+      <input type="hidden" name="mensagem" value="{{ mensagem }}" width="100px" heigth="100px">
+  </form>
+
+</div>
+
+{% endblock %} {% block mscripts %}
+<script src="{% static 'disparo/js/envio.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta3/js/bootstrap.min.js" integrity="sha384-YhjVNQq5/00U/ZZXpHp0CKxhjL5+5z5v7RdU1IZYYL2gW3cMnGZ9uUc0oM7h4e" crossorigin="anonymous"></script>
+
+<script>
+  const enviar_disparo_url = "{% url 'enviar_disparo' %}";
+  function showLoadingIndicator() {
+    // Selecionar e mostrar o indicador de carregamento
+    const loadingIndicator = document.getElementById('loading-indicator');
+    loadingIndicator.style.display = 'block';
+}
+
+</script>
+  
+
+{% endblock %}

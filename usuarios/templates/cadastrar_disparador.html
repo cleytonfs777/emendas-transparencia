@@ -1,0 +1,155 @@
+{% extends 'base.html' %} {% load static %} {% block title %}Cadastro
+{%endblock%} {% block estilo %} {% endblock %} {% block content %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %}
+
+  {% endif %}
+  <div class="container nav_tabs">
+
+        <h3 class="mt-4 mb-0 py-2" style="background: #F47920; text-align: center; color: white;">Cadastro de Disparador</h3>
+
+    <!--FORM1-->
+    <form action="{% url 'cadastrar_disparador' %}" id="idFormDep" class="bg-white p-1" method="POST">{% csrf_token %}
+      <div class="container">
+        <div class="row form-dep py-0">
+          <div class="col-md-6 py-2">
+            <label for="nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="nome" name="nome" />
+          </div>
+          <div class="col-md-6 py-2">
+            <label for="sobrenome" class="form-label">Sobrenome</label>
+            <input type="text" class="form-control" id="sobrenome" name="sobrenome" />
+          </div>
+        </div>
+        <div class="row form-dep py-0">
+          <div class="col-md-6 py-2">
+            <label for="usuario" class="form-label">Usuario</label>
+            <input type="text" class="form-control" id="usuario" name="usuario" />
+          </div>
+          <div class="col-md-6 py-2">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email" name="email" />
+          </div>
+        </div>
+        <div class="row form-dep py-0">
+          <div class="col-md-6 py-2">
+            <label for="tokenDep" class="form-label">Senha</label>
+            <div class="input-group mb-3">
+              <input id="tokenDep" type="password" class="form-control" name="senha" required>
+              <button class="btn btn-outline-secondary password-toggle" type="button" data-target="#tokenDep"><i class="bi bi-eye"></i></button>
+            </div>
+          </div>
+          <div class="col-md-6 py-2">
+            <label for="tokenDep2" class="form-label">Repetir Senha</label>
+            <div class="input-group mb-3">
+              <input id="tokenDep2" type="password" class="form-control" name="senha2" required>
+              <button class="btn btn-outline-secondary password-toggle" type="button" data-target="#tokenDep2"><i class="bi bi-eye"></i></button>
+            </div>          
+          </div>
+        </div>
+          <div class="row form-dep py-0">
+            <div class="col-md-6 py-2">
+              <div class="row">
+                <div class="col-md-2">
+                  <div>
+                    <label for="dddregdisp" class="form-label">DDD</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dddregdisp"
+                      name="dddregdisp"
+                      maxlength="2"
+                      name="dddtit"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="mudarFoco(this)"
+                    />
+                  </div>
+                </div>
+                <div class="col-md-10">
+                  <div>
+                    <label for="telregdisp" class="form-label">Telefone</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telregdisp"
+                      name="telregdisp"
+                      maxlength="10"
+                      onkeypress="return somenteNumeros(event)"
+                      oninput="formatarNumero(this)"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+        <div class="row justify-content-center">
+          <input type="submit" class="btn btn-primary mb-3 my-5 p-3 h2 col-md-6" style="font-size:1.2rem;font-weight:bold;background: #F47920;border:none;" value="Cadastrar"/>
+        </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MEUS SCRIPTS-->
+<script>
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const passwordToggles = document.querySelectorAll('.password-toggle');
+
+    passwordToggles.forEach(function (toggle) {
+        const targetInput = document.querySelector(toggle.dataset.target);
+
+        toggle.addEventListener('click', function () {
+            if (targetInput.type === 'password') {
+                targetInput.type = 'text';
+                toggle.innerHTML = '<i class="bi bi-eye-slash"></i>';
+            } else {
+                targetInput.type = 'password';
+                toggle.innerHTML = '<i class="bi bi-eye"></i>';
+            }
+        });
+    });
+});
+
+
+
+function somenteNumeros(e) {
+  var charCode = e.which ? e.which : e.keyCode;
+  if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+    return false;
+  }
+  return true;
+}
+
+function formatarNumero(el) {
+  var valor = el.value.replace(/\D/g, ""); // Remove todos os caracteres não numéricos
+  var novoValor = "";
+  console.log(valor.length);
+  if (valor.length <= 4) {
+    novoValor = valor;
+  } else if (valor.length === 9) {
+    novoValor = valor.slice(0, 5) + "-" + valor.slice(5, 9);
+  } else {
+    novoValor = valor.slice(0, 4) + "-" + valor.slice(4);
+  }
+
+  if (valor.length === 5 && el.value.length === 5) {
+    novoValor = valor.slice(0, 4) + "-" + valor.slice(4);
+  }
+
+  el.value = novoValor;
+}
+
+function mudarFoco(element) {
+  if (element["id"] == "dddregdisp") {
+    if (element.value.length == element.maxLength) {
+      document.getElementById("telregdisp").focus();
+    }
+  }
+}
+</script>
+{% endblock %}

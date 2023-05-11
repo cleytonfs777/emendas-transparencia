@@ -1,0 +1,199 @@
+{% extends 'base.html' %} 
+{% load static %} 
+{% load filters %}
+{% block title %}Edições
+{%endblock%} {% block estilo %}
+ <link rel="stylesheet" href="{% static 'cadastrar/css/style.css' %}" />
+
+ {% endblock %} {% block content %}
+
+<div class="container container-cad" id="main-container">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert {{message.tags}} stilo-message">{{message}}</div>
+  {% endfor %}
+
+  {% endif %}
+  <div class="container nav_tabs table-responsive">
+    <ul class="d-flex">
+      <li class="tab-item flex-grow-1">
+        <input type="radio" name="tabs" class="rd_tabs"/>
+        <label class="list-authorization-main">ASSESSOR</label>
+      </li>
+    </ul>
+    <!--LIST2 -->
+    <div class="table-responsive">
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Titular Anterior</th>
+          <th scope="col">Titular Novo</th>
+          <th scope="col">Telefone</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align: center;"></td>
+          <td></td>
+          <td></td>
+          <td>
+            <a href="#" class="btn btn-primary text-light m-2 btn-manag edit-btn"  data-bs-toggle="modal" data-bs-target="#authAssessor" data-bs-whatevernamAss="{{assessor.nome_ass}}" data-bs-whateveridUserAss="{{assessor.id_a}}" data-bs-whateverNomeTitAss="{{assessor.nome_tit}}" data-bs-whateverNomeCatAss="{{assessor.nome_cat}}" data-bs-idfullTit="{{assessor.nome_tit|verifica_titular:assessor.nome_cat}}" data-bs-whateverdddAss="{{assessor.ddd}}" data-bs-whatevertelAss="{{assessor.telfnumber}}" onclick="resetmodel()"><i class="fs-6 bi bi-hand-thumbs-up-fill"></i></a>
+            <a href="{% url 'auth_deleta_assessor' assessor.id %}" class="btn btn-danger m-2 btn-manag" onclick="return confirm('Realmente deseja excluir o Assessor ?')"><i class="fs-6 bi bi-hand-thumbs-down-fill"></i></a>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+    <!--FIM LIST2-->
+     <!-- MODAL ASSESSORES -->
+     <div class="modal fade" id="authAssessor" tabindex="-1" aria-labelledby="authAssModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title fs-5 fw-bold text-primary-emphasis text-center" id="authAssModalLabel">
+              Analisar dados do assessor
+            </h6>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+            <form id="idAuthFormAss2" class="bg-white p-1" method="post" action="{% url 'rec_authorization_ass' %}">
+              {% csrf_token %}
+              <div class="container">
+                <div class="row form-dep py-0">
+                  <div class="py-2 d-flex flex-column">
+                    <label for="authdepRep2" class="form-label">Titular Representado</label>
+                    <select
+                      class="form-select"
+                      aria-label="Default select"
+                      id="authdepRep2"
+                      name="authdepRep2"
+                      onchange="ajustadisplay()"
+                    >
+                      <option disabled selected>
+                        Selecione o parlamentar
+                      </option>
+                      {% for titular in titulares %}
+                      <option value="{{titular.id}}">{{titular.categoria_id|adiciona_categoria}} {{titular.nome}}</option>
+                      {% endfor %}
+                      <option>
+                        Não listado
+                      </option>
+                    </select>
+                  </div>
+                  <div id="authsugesttit" class="row mt-2 form-dep d-flex justify-content-center align-items-start d-none">
+                    <div class="col-10 d-flex justify-content-center align-items-center alert alert-danger" >
+                      Titular não encontrado
+                    </div>
+                    <div class="col-1 mt-2">
+                      <button type="button" class="btn btn-warning py-1" onclick="adicionaTitModel()"><i class="fs-4 bi bi-person-fill-add"></i></button>                   
+                    </div>
+                  </div>
+                  {% comment %} LINHA QUE DEFINE O CADASTRO DE ASSESSORES {% endcomment %}
+                  <div id="adicionadorTitModel" class="row form-dep py-0 d-none" style="background:#e7edef;">
+                    <div class="col-lg-12 py-2">
+                      <label for="categoriaDepAss" class="form-label">Categoria</label>
+                      <button type="button" class="btn btn-sm btn-primary rounded-circle mb-2" onclick="addCatModel()">
+                          <i class="bi bi-plus-lg"></i>
+                      </button>
+                      <select
+                        class="form-select"
+                        aria-label="Default select"
+                        id="categoriaDepAss"
+                        name="opcaoCat"
+                      >
+                        <option disabled selected>
+                          Selecione a categoria
+                        </option>
+                        {% for categoria in categorias %}
+                        <option value="{{categoria.nome}}">{{categoria.nome}}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                    <div class="col-lg-12 d-none" id="divathinlinecat">
+                      <input type="text" class="form-control py-2" id="athinlinecat" style="padding-bottom:10%;" name="athinlinecat"/>
+                    </div>
+                    <div class="col-lg-12 py-2">
+                      <label for="authassnametit" class="form-label">Nome do Titular</label>
+                      <input type="text" class="form-control py-2" id="authassnametit" style="padding-bottom:10%;" name="authassnametit"/>
+                    </div>
+                  </div>
+                  <div class="py-2">
+                    <label for="authnameAss2" class="form-label">Nome do Assessor</label>
+                    <input type="text" class="form-control" id="authnameAss2" name="authnameAss2"/>
+                  </div>
+                  <input type="hidden" name="authasschatid" id="authasschatid" value="">
+                </div>
+
+                <!-- INICIO DO DDD E TELEFONE -->
+                <div class="row form-dep py-0">
+                  <div class="py-2 col-2">
+                    <label for="dddautass" class="form-label">DDD</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="dddautass"
+                      name="dddautass"
+                      onkeypress="return somenteNumeros(event)" 
+                      oninput="changeFoco(this)"
+                      maxlength="2"
+                    />
+                  </div>
+                  <div class="py-2 col-10">
+                    <label for="telefautass" class="form-label">Telefone</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="telefautass"
+                      name="telefautass"
+                      onkeypress="return somenteNumeros(event)" 
+                      oninput="formatarNumero(this)"
+                      maxlength="10"
+                    />
+                  </div>
+                </div>
+                
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary text-light">Salvar</button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    data-bs-dismiss="modal"
+                  >
+                    Cancelar
+                  </button>
+                </div>
+     
+              </div>
+            </form>
+            <!-- FORMULARIO DE EDIÇÃO PARA ASSESSORES -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block mscripts %}
+<script src="{% static 'cadastrar/js/script.js' %}"></script>
+<script>
+  function changeFoco(element) {
+    if(element['id'] == 'dddtit'){
+       if (element.value.length == element.maxLength) {
+        document.getElementById("telefonetit").focus();
+    }
+    }else if(element['id'] == 'dddautass'){
+    if (element.value.length == element.maxLength) {
+      document.getElementById("telefautass").focus();
+    }
+    
+    }
+    }
+
+</script>
+{% endblock %}
+
+

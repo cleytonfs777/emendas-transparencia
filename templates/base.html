@@ -1,0 +1,187 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock %}</title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- ESTILOS BOOTSTRAP-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <!-- BOOTSTRAP ICONS-->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+    <!-- MEUS ESTILOS-->
+    <link rel="stylesheet" href="{% static 'conteudo/css/style.css' %}" />
+    {% block estilo %}{% endblock %}
+    <!-- CARREGANDO SELECT2 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .no-wrap {
+        white-space: nowrap;
+      }
+      .btn.btn-success.comon-button{
+        background: #F47920;
+        color: #fff;
+        font-weight: bold;
+        border: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary-color" id="navbar">
+      <div class="container py-3">
+        <a class="navbar-brand" href="{% url 'enviar_disparo' %}">
+          <img
+            src="{% static 'conteudo/img/LOGO_REDIM.png' %}"
+            alt="Emendas Bot"
+            class="rounded-circle"
+          />
+          <span class="main-top d-flex justify-content-center align-items-center">Painel</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbar-items"
+          aria-controls="navbar-items"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="bi bi-list"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbar-items">
+          <!-- MENU SAIR E USUARIO LOGADO-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              {% if request.user.cargo == 'A' %}
+              <a class="nav-link" aria-current="page" href="{% url 'enviar_disparo' %}"
+                >DISPARADOR</a
+              >
+              {% endif %}
+            </li>
+            <li class="nav-item dropdown">
+              {% if request.user.cargo == 'A' %}
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                RECURSOS
+              </a>
+              <ul class="dropdown-menu bg-primary-color" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'cadastrar' %}">Cadastrar</a></li>
+                <li><a class="dropdown-item" href="{% url 'listar' %}?tabela=titular">Listar</a></li>
+              </ul>
+              {% endif %}
+            </li>
+            <li class="nav-item dropdown">
+              {% if request.user.cargo == 'A' %}
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                USUARIOS
+              </a>
+              <ul class="dropdown-menu bg-primary-color" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="{% url 'cadastrar_disparador' %}">Cadastrar</a></li>
+                <li><a class="dropdown-item" href="{% url 'listar_disparador' %}">Listar</a></li>
+              </ul>
+              {% endif %}
+            </li>
+            <li class="nav-item dropdown">
+              {% if request.user.cargo == 'A' %}
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownAdmin" role="button" data-bs-toggle="dropdown" aria-expanded="false">ADMINISTRADOR </a>
+              <ul class="dropdown-menu bg-primary-color" aria-labelledby="navbarDropdownAdmin">
+                <li>
+                  <a class="dropdown-item" href="{% url 'add_authorization' %}">Aprovações</a>
+                  <a class="dropdown-item" href="{% url 'log_disparo' %}">Log de disparo</a>
+                  <a class="dropdown-item" href="{% url 'ajuda_manager' %}">Ajuda</a>
+                </li>
+              </ul>
+              {% endif %}
+          </li>
+            <li class="nav-item">
+              {% if request.user.cargo == 'A' %}
+              <a href="{% url 'sync_database' %}" class="btn btn-success comon-button text-light fw-bolder" style="font-size:.7em;">SYNC DATABASE</a>
+              {% endif %}
+              {% comment %} TODO - IMPLEMENTAR A FUNÇÃO DE SYNC DATABASE {% endcomment %}
+            </li>
+          </ul>
+          <div class="d-flex flex-row justify-content-end align-items-center text-light fw-bolder">
+            {% if request.user.is_authenticated %}
+          <span class="navbar-text mx-2 no-wrap text-light fw-bolder">Olá, {{ request.user.username }} | </span>
+          <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+          {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Entrar</a>
+          {% endif %}
+          </div>
+        </div>
+      </div>
+    </nav>
+    
+    {% block content %}{% endblock %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const navLinks = document.querySelectorAll('.nav-link, .dropdown-item');
+          const currentPath = window.location.pathname;
+        
+          navLinks.forEach(link => {
+            const linkPath = new URL(link.getAttribute('href'), window.location.origin).pathname;
+        
+            if (currentPath === linkPath) {
+              link.classList.add('active');
+            }
+        
+            link.addEventListener('click', function () {
+              navLinks.forEach(link => link.classList.remove('active'));
+              this.classList.add('active');
+            });
+          });
+        });
+      </script>
+      
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- SCRIPTS BOOTSTRAP-->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"
+    ></script>
+    <!-- MEUS SCRIPTS-->
+    <script src="{% static 'conteudo/js/script.js' %}"></script>
+    {% block mscripts %}
+    
+    {% endblock %}
+  </body>
+</html>
