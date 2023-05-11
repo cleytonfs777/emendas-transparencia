@@ -1,0 +1,35 @@
+span.select2 {
+    width: 100%!important;
+}
+
+/* styles.css */
+
+.table-scroll {
+    overflow-x: auto!important;
+  }
+  
+p.card-text {
+    word-wrap: break-word;
+    white-space: normal;
+    text-align: justify;
+}
+
+.tablesorter-header {
+    cursor: pointer;
+    background-repeat: no-repeat;
+    background-position: right center;
+    padding-right: 20px;
+  }
+  
+  .tablesorter-headerAsc {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M31 192l129 128 129-128H31z"/></svg>');
+  }
+  
+  .tablesorter-headerDesc {
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><path d="M289 320L160 192 31 320h258z"/></svg>');
+  }
+
+
+form.hidden-filter {
+    display: none!important;
+}
