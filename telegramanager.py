@@ -853,7 +853,7 @@ async def callback(clinet, callback_query):
         elif callback_query.data[5:] == "NRC":
             await callback_query.message.reply_text("Por favor, selecione o botão 'Cadastrar' abaixo")
             await callback_query.message.reply_text("Caso ainda reste duvidas veja o tutorial detalhado de como realizar o cadastro no link abaixo")
-            await callback_query.message.reply_text('<a href="https://www.youtube.com/watch?v=UMSwzV-sJWI">TUTORIAL CADASTRO</a>')
+            await callback_query.message.reply_text("https://www.youtube.com/watch?v=9QZ1XZ7n7qY")
 
         elif callback_query.data[5:] == "NRD":
             if not helps['help_user']:
