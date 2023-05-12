@@ -299,6 +299,25 @@ def password_reset_request(request):
     return render(request, "password_reset_form.html")
 
 
+# # accounts/views.py
+# class MyPasswordReset(auth.views.PasswordResetView):
+#     '''
+#     Requer
+#     registration/password_reset_form.html
+#     registration/password_reset_email.html
+#     registration/password_reset_subject.txt  Opcional
+#     '''
+#     ...
+
+
+# class MyPasswordResetDone(auth.views.PasswordResetDoneView):
+#     '''
+#     Requer
+#     registration/password_reset_done.html
+#     '''
+#     ...
+
+
 def password_reset_confirm(request, uidb64=None, token=None):
     friendly_password_requirements = [
         "A senha deve ter pelo menos 8 caracteres.",
