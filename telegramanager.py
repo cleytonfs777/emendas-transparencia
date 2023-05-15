@@ -894,6 +894,7 @@ async def callback(clinet, callback_query):
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
                     await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
@@ -1397,18 +1398,23 @@ async def messages(Client, message):
     elif general_session['stado'] and general_session['stado']['state'] != None:
         if general_session['stado']['state'].startswith('help'):
             # Pega a ultima mensagem e insere na variavel de sessão mensagem
-            registra_user_help(message.chat.id,
-                               general_session['namedep2'], "mensagem")
-            # Limpa os states
-            registra_user_states(message.chat.id, None, "state")
-            # Grava todos os dados no banco
-            objeto = app.get_user_help(message.chat.id)
-            print(f"Objeto: {objeto}")
 
-            db.inserir_dados_help(nome=converte_nome(objeto['nome']), id_user=message.chat.id, categoria=converte_nome(objeto['categoria']),
-                                  telefone=objeto['telefone'], mensagem=objeto['mensagem'], tipo=objeto['tipo'])
+            # Verifica se a mensagem tem mais de 800 caracteres
+            if len(general_session['namedep2']) < 800:
+                registra_user_help(message.chat.id,
+                                   general_session['namedep2'], "mensagem")
 
-            await app.send_message(message.chat.id, f"Sua solicitação foi encaminhada com sucesso 🎉!! Em breve entraremos em contato para juntos sanar-mos o problema 🤝")
+                registra_user_states(message.chat.id, None, "state")
+                # Grava todos os dados no banco
+                objeto = app.get_user_help(message.chat.id)
+                print(f"Objeto: {objeto}")
+
+                db.inserir_dados_help(nome=converte_nome(objeto['nome']), id_user=message.chat.id, categoria=converte_nome(objeto['categoria']),
+                                      telefone=objeto['telefone'], mensagem=objeto['mensagem'], tipo=objeto['tipo'])
+
+                await app.send_message(message.chat.id, f"Sua solicitação foi encaminhada com sucesso 🎉!! Em breve entraremos em contato para juntos sanar-mos o problema 🤝")
+            else:
+                await app.send_message(message.chat.id, f"Desculpe, mas sua mensagem é muito grande. Por favor, tente novamente com uma mensagem menor")
 
         elif general_session['stado']['state'][-1] == 'p':
 
