@@ -4,9 +4,7 @@
 <link rel="stylesheet" href="{% static 'disparo/css/envio.css' %}" />
 <style>
   .chat-container {
-    background-image: url("{% static 'conteudo/img/fundo_telegram.png' %}");
-    background-repeat: no-repeat;
-    background-size: cover;
+    background: #91d1f2;
   }
 </style>
 {% endblock%} 
@@ -53,19 +51,22 @@
 </div>
 
 {% endblock %} {% block mscripts %}
-<script src="{% static 'disparo/js/envio.js' %}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta3/js/bootstrap.min.js" integrity="sha384-YhjVNQq5/00U/ZZXpHp0CKxhjL5+5z5v7RdU1IZYYL2gW3cMnGZ9uUc0oM7h4e" crossorigin="anonymous"></script>
-
 <script>
   const enviar_disparo_url = "{% url 'enviar_disparo' %}";
   function showLoadingIndicator() {
     // Selecionar e mostrar o indicador de carregamento
     const loadingIndicator = document.getElementById('loading-indicator');
     loadingIndicator.style.display = 'block';
-}
+  }
+  function confirmar() {
+    showLoadingIndicator()
+    document.getElementById('form_confirmar').submit();
+  }
+
+  function cancelar() {
+    window.location.href = enviar_disparo_url;
+  }
+
 
 </script>
   

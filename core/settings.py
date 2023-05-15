@@ -7,25 +7,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# # Carregue as variáveis de ambiente do arquivo .env
-# load_dotenv(os.path.join(BASE_DIR, '.env'))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ["SECRET_KEY"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-# Application definition
 
 INSTALLED_APPS = [
     # MINHAS APPS
@@ -101,7 +90,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
-ENCRYPTED_FIELD_KEY = "batatinha123"
+ENCRYPTED_FIELD_KEY = "9C1133D47A231F9CABBCEFFCEE38766EEE0FA277870B746026F4EC6E813E1EB6"
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -130,36 +119,19 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'templates/static'),)
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'fotosbm')
 MEDIA_URL = '/fotosbm/'
-WHITENOISE_ROOT = MEDIA_ROOT
 
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Config auth
 AUTH_USER_MODEL = 'usuarios.Users'
 
-
-# Role Permissions
 ROLEPERMISSIONS_MODULE = 'core.roles'
-
-# Messages
 
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert-primary',
@@ -186,3 +158,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 PASSWORD_RESET_EMAIL = 'password_reset_email.html'
+
+# Adicione essas configurações ao final do seu settings.py
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Serve os arquivos de mídia através do whitenoise
+WHITENOISE_ROOT = MEDIA_ROOT
