@@ -117,7 +117,7 @@ class AjudaManager(models.Model):
     tema = models.CharField(max_length=50,
                             choices=TEMA_CHOICES)
     telefone = models.CharField(
-        max_length=30, unique=True, null=True, blank=True)
+        max_length=300, unique=True, null=True, blank=True)
     mensagem = models.CharField(max_length=900, blank=True)
     data = models.DateTimeField(auto_now_add=True)
 
