@@ -1,18 +1,26 @@
 body {
     background-color: #f2f2f2;
-}
-
-.chat-container {
+  }
+  
+  .chat-container {
     max-width: 40%;
     margin: 0 auto;
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     position: relative;
     margin-top: 50px;
-}
-
+    min-width: 330px; /* Largura mínima de 330px */
+  }
+  
+  /* Adicione a media query abaixo dos estilos existentes */
+  @media (max-width: 600px) {
+    .chat-container {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
 .chat-header {
     height: 60px;
     background-color: #007bff;
