@@ -54,3 +54,24 @@
     color: var(--secondary-color);
     background: var(--primary-color);
   }
+
+  @media screen and (max-width: 600px) {
+    /* Insira os estilos para dispositivos móveis aqui */
+  
+    .container h-100 {
+      width: 100%;
+      height: 100%;
+    }
+    
+    .card {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+    }
+  
+    .col-xxl-4, .col-xl-5, .col-lg-5, .col-md-7, .col-sm-9 {
+      max-width: 100%;
+      flex: 0 0 100%;
+    }
+  }
+  
