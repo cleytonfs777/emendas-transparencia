@@ -146,6 +146,9 @@ LOGIN_URL = 'login'
 
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_SSL_REDIRECT = True
 
 # Tempo em que o link de redefinição de senha será válido (em dias)
 PASSWORD_RESET_TIMEOUT_DAYS = 1
