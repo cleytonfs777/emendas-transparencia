@@ -149,6 +149,8 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
+CSRF_TRUSTED_ORIGINS = ['www.disparoetransparencia.live']
+
 # Tempo em que o link de redefinição de senha será válido (em dias)
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 # configurações de e-mail
