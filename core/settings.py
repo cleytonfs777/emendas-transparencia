@@ -69,7 +69,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-CSRF_TRUSTED_ORIGINS = ['https://django-server-production-113d.up.railway.app']
+CSRF_TRUSTED_ORIGINS = [
+    'https://django-server-production-113d.up.railway.app', 'https://www.disparoetransparencia.live']
 
 
 # Database
@@ -149,7 +150,6 @@ AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 
-CSRF_TRUSTED_ORIGINS = ['*']
 
 # Tempo em que o link de redefinição de senha será válido (em dias)
 PASSWORD_RESET_TIMEOUT_DAYS = 1
