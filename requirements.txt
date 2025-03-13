@@ -57,9 +57,6 @@ fastapi-cli==0.0.3
 fastjsonschema==2.19.1
 filelock==3.14.0
 Flask==3.0.3
-flet==0.22.1
-flet-core==0.22.1
-flet-runtime==0.22.1
 frozenlist==1.4.1
 google-api-core==2.19.0
 google-api-python-client==2.160.0
