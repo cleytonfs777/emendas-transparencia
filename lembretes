@@ -1,0 +1,1 @@
+ls telegramanager.py | entr -r python telegramanager.py

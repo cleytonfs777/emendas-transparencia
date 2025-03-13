@@ -24,7 +24,7 @@ emendasbotproject-f21322485330.json
 
 # C extensions
 *.so
-
+docker-compose.yml
 # Distribution / packaging
 .Python
 build/

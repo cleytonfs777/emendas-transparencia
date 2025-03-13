@@ -116,8 +116,7 @@ def confirmar_disparo(request):
         new_logo_height = int(logo_height * (new_logo_width / logo_width))
 
         # redimensiona a logo
-        resized_logo = logo.resize(
-            (new_logo_width, new_logo_height), Image.ANTIALIAS)
+        resized_logo = logo.resize((new_logo_width, new_logo_height))
 
         # calcula a posição da logo (canto inferior direito, com uma margem de 10 pixels)
         logo_position = (img_width - new_logo_width - 10,

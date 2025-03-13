@@ -832,7 +832,7 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
@@ -846,13 +846,13 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
         elif callback_query.data[5:] == "NRC":
             await callback_query.message.reply_text("Por favor, selecione o botão 'Cadastrar' abaixo")
-            await callback_query.message.reply_text("Caso ainda reste duvidas veja o tutorial detalhado de como realizar o cadastro no link abaixo")
+            await callback_query.message.reply_text("Caso ainda restem dúvidas veja o tutorial detalhado de como realizar o cadastro no link abaixo")
             await callback_query.message.reply_text('<a href="https://www.youtube.com/watch?v=UMSwzV-sJWI">TUTORIAL CADASTRO</a>')
 
         elif callback_query.data[5:] == "NRD":
@@ -865,7 +865,7 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
@@ -879,7 +879,7 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
@@ -893,7 +893,7 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
 
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
@@ -908,7 +908,7 @@ async def callback(clinet, callback_query):
                 else:
                     # Fluxo normal de auxilio ao usuário
                     # TODO Criar variavel de ambiente para registrar natureza do questionamento e esvazia-la ao gravar
-                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxilia-lo(a) da melhor forma possível")
+                    await callback_query.message.reply_text("Muito bem, Nos informe resumidamente o problema que o senhor(a) está enfrentando para que possamos auxiliá-lo(a) da melhor forma possível")
                     registra_user_states(
                         callback_query.message.chat.id, HELP_USER_MESSAGE, "state")
 
@@ -937,8 +937,8 @@ async def callback(clinet, callback_query):
     # TITULAR_PASSO_4
     elif callback_query.data == 'queretamb':
         registra_sess_data(callback_query.message.chat.id, True, 'only_assec')
-        await app.send_message(callback_query.message.chat.id, f'Estamos indo bem 😀. O senhor receberá todas as informações de ocorrencias relativos a recursos encaminhados pelo senhor!')
-        await app.send_message(callback_query.message.chat.id, f'Para finalizar solicitamos que o senhor nos informe o melhor numero de telefone para contato. Não se preocupe por o numero será salvo de maneira criptografada')
+        await app.send_message(callback_query.message.chat.id, f'Estamos indo bem 😀. O senhor receberá todas as informações de ocorrências relativas a recursos encaminhados pelo senhor!')
+        await app.send_message(callback_query.message.chat.id, f'Para finalizar solicitamos que o senhor nos informe o melhor número de telefone para contato. Não se preocupe por o número será salvo de maneira criptografada')
         reply_markup = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton(
@@ -952,9 +952,9 @@ async def callback(clinet, callback_query):
 
     elif callback_query.data == 'apmeuacess':
         registra_sess_data(callback_query.message.chat.id, False, 'only_assec')
-        await app.send_message(callback_query.message.chat.id, f'Encaminharemos todas as mensagem apenas ao seu assessor. Fique tranquilo o Senhor não será notificado!')
-        await app.send_message(callback_query.message.chat.id, f'Para finalizar solicitamos que o senhor nos informe o melhor numero de telefone para contato')
-        await app.send_message(callback_query.message.chat.id, f'Não se preocupe por o numero será salvo de maneira criptografada')
+        await app.send_message(callback_query.message.chat.id, f'Encaminharemos todas as mensagens apenas ao seu assessor. Fique tranquilo, o Senhor não será notificado!')
+        await app.send_message(callback_query.message.chat.id, f'Para finalizar solicitamos que o senhor nos informe o melhor número de telefone para contato')
+        await app.send_message(callback_query.message.chat.id, f'Não se preocupe por o número será salvo de maneira criptografada')
         reply_markup = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton(
@@ -966,7 +966,7 @@ async def callback(clinet, callback_query):
 
         await callback_query.message.reply_text("Gostaria de fornecer seu telefone?", reply_markup=reply_markup)
 
-    # QUERY PARA DEFINIR O TIPO DE DEPUTADO QUE O ASSESSOR AUXILIA
+    # QUERY PARA DEFINIR O TIPO DE DEPUTADO QUE O ASSESSOR AUXILIá
     elif callback_query.data.endswith("_editando"):
         db.atualiza_dado_tit(callback_query.message.chat.id,
                              'categoria', callback_query.data[:-9], 'f')
@@ -1013,14 +1013,14 @@ async def callback(clinet, callback_query):
                 if callback_query.data[-1] == 'f':
                     print("Altera o DDD")
                     await callback_query.message.reply_text(f"Vamos alterar primeiro o seu DDD")
-                    await callback_query.message.reply_text(f"Insira os dois digitos do seu DDD sem o zero")
+                    await callback_query.message.reply_text(f"Insira os dois dígitos do seu DDD sem o zero")
                     # TODO: Implementar edição de ddd e telefone
                     registra_user_states(
                         callback_query.message.chat.id, EDIT_DDD_T_F, "state")
 
                 elif callback_query.data[-1] == 'p':
                     await callback_query.message.reply_text(f"Vamos alterar primeiro o seu DDD")
-                    await callback_query.message.reply_text(f"Insira os dois digitos do seu DDD sem o zero")
+                    await callback_query.message.reply_text(f"Insira os dois dígitos do seu DDD sem o zero")
                     # TODO: Implementar edição de ddd e telefone
                     registra_user_states(
                         callback_query.message.chat.id, EDIT_DDD_T_P, "state")
@@ -1081,14 +1081,14 @@ async def callback(clinet, callback_query):
                 if callback_query.data[-1] == 'f':
                     print("Altera o DDD")
                     await callback_query.message.reply_text(f"Iremos alterar primeiro o seu DDD")
-                    await callback_query.message.reply_text(f"Digite os dois digitos do seu DDD sem o zero")
+                    await callback_query.message.reply_text(f"Digite os dois dígitos do seu DDD sem o zero")
                     # TODO: Implementar edição de ddd e telefone
                     registra_user_states(
                         callback_query.message.chat.id, EDIT_DDD_A_F, "state")
 
                 elif callback_query.data[-1] == 'p':
                     await callback_query.message.reply_text(f"Iremos alterar primeiro o seu DDD")
-                    await callback_query.message.reply_text(f"Digite os dois digitos do seu DDD sem o zero")
+                    await callback_query.message.reply_text(f"Digite os dois dígitos do seu DDD sem o zero")
                     # TODO: Implementar edição de ddd e telefone
                     registra_user_states(
                         callback_query.message.chat.id, EDIT_DDD_A_P, "state")
@@ -1111,10 +1111,10 @@ async def callback(clinet, callback_query):
         if "yes_" in resp_:
             if callback_query.data[-1] == 'a':
                 db.apaga_ass(callback_query.message.chat.id)
-                await callback_query.message.reply(f"Usuário excluido com sucesso!!")
+                await callback_query.message.reply(f"Usuário excluído com sucesso!!")
             elif callback_query.data[-1] == 't':
                 db.apaga_titular(callback_query.message.chat.id)
-                await callback_query.message.reply(f"Usuário excluido com sucesso!!")
+                await callback_query.message.reply(f"Usuário excluído com sucesso!!")
 
     elif callback_query.data.startswith("sim_"):
 
@@ -1153,7 +1153,7 @@ async def callback(clinet, callback_query):
         if callback_query.data[-1] == 't':
 
             if "Outro" in callback_query.data:
-                await callback_query.message.reply_text(f"Por favor, digite os dois numeros de seu DDD sem as parênteses")
+                await callback_query.message.reply_text(f"Por favor, digite os dois números de seu DDD sem as parênteses")
             else:
                 registra_sess_data(callback_query.message.chat.id,
                                    callback_query.data[0:2], 'ddd_tit')
@@ -1163,11 +1163,11 @@ async def callback(clinet, callback_query):
         elif callback_query.data[-1] == 'a':
 
             if "Outro" in callback_query.data:
-                await callback_query.message.reply_text("Senhor Assessor, digite os dois numeros de seu DDD sem as parênteses")
+                await callback_query.message.reply_text("Senhor Assessor, digite os dois números de seu DDD sem as parênteses")
             else:
                 registra_sess_data(callback_query.message.chat.id,
                                    callback_query.data[0:2], 'ddd_ass')
-                await callback_query.message.reply_text("Para finalizar nos informe apenas os numeros do telefone que o senhor deseja cadastrar")
+                await callback_query.message.reply_text("Para finalizar nos informe apenas os números do telefone que o senhor deseja cadastrar")
 
     elif callback_query.data.startswith("authtel"):
 
@@ -1265,8 +1265,8 @@ async def messages(Client, message):
         registra_sess_data(
             message.chat.id, general_session['namedep2'], 'nome_tit')
         await app.send_message(message.chat.id, f"Excelente senhor(a) assessor(a) {user_data_f['nome_ass']}😀")
-        await app.send_message(message.chat.id, f"Para finalizar solicitamos que o senhor nos informe o melhor numero de telefone para contato")
-        await app.send_message(message.chat.id, f"Não se preocupe por o numero será salvo de maneira criptografada")
+        await app.send_message(message.chat.id, f"Para finalizar solicitamos que o senhor nos informe o melhor número de telefone para contato")
+        await app.send_message(message.chat.id, f"Não se preocupe por o número será salvo de maneira criptografada")
         reply_markup = InlineKeyboardMarkup([
             [
                 InlineKeyboardButton(
@@ -1307,25 +1307,25 @@ async def messages(Client, message):
         # Vai para TITULAR_PASSO_4
 
     #
-    elif "Por favor, digite os dois numeros de seu DDD sem as parênteses" in general_session['namedep1'] or "Valor incorreto. Digite apenas os dois numeros do seu DDD" in general_session['namedep1']:
+    elif "Por favor, digite os dois números de seu DDD sem as parênteses" in general_session['namedep1'] or "Valor incorreto. Digite apenas os dois números do seu DDD" in general_session['namedep1']:
         registra_user_general(message.chat.id, limpaddd(
             general_session['namedep2']), "ddd")
         ddd_session = app.get_user_general(message.chat.id)
 
         if len(ddd_session['ddd']) > 2:
-            await message.reply('Valor incorreto. Digite apenas os dois numeros do seu DDD')
+            await message.reply('Valor incorreto. Digite apenas os dois números do seu DDD')
             print("DDD: ", ddd_session['ddd'])
         else:
             registra_sess_data(message.chat.id, ddd_session['ddd'], 'ddd_tit')
-            await app.send_message(message.chat.id, f"Por fim nos informe apenas os numeros do telefone que o senhor deseja cadastrar")
+            await app.send_message(message.chat.id, f"Por fim nos informe apenas os números do telefone que o senhor deseja cadastrar")
 
-    elif "Por fim nos informe apenas os numeros do telefone" in general_session['namedep1'] or "Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
+    elif "Por fim nos informe apenas os números do telefone" in general_session['namedep1'] or "Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
         registra_user_general(message.chat.id, limpaddd(
             general_session['namedep2']), "tel")
         tel_session = app.get_user_general(message.chat.id)
 
         if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-            await message.reply('Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos')
+            await message.reply('Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos')
             print("DDD: ", tel_session["tel"])
         else:
             registra_sess_data(message.chat.id, tel_session["tel"], 'tel_tit')
@@ -1341,13 +1341,13 @@ async def messages(Client, message):
                                     id_t=obj_comp['id_t'], only_assec=obj_comp['only_assec'], ddd=obj_comp['ddd_tit'], telfnumber=obj_comp['tel_tit'])
 
     # Referente a titulares
-    elif "Por fim digite apenas os números do melhor telefone" in general_session['namedep1'] or "Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
+    elif "Por fim digite apenas os números do melhor telefone" in general_session['namedep1'] or "Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
         registra_user_general(message.chat.id, limpaddd(
             general_session['namedep2']), "tel")
         tel_session = app.get_user_general(message.chat.id)
 
         if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-            await message.reply('Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos')
+            await message.reply('Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos')
             print("DDD: ", tel_session["tel"])
         else:
             registra_sess_data(message.chat.id, tel_session["tel"], 'tel_tit')
@@ -1362,14 +1362,14 @@ async def messages(Client, message):
                 db.inserir_dado_tit(nome_cat=converte_nome(obj_comp['nome_cat']), nome_tit=converte_nome(obj_comp['nome_tit']),
                                     id_t=obj_comp['id_t'], only_assec=obj_comp['only_assec'], ddd=obj_comp['ddd_tit'], telfnumber=obj_comp['tel_tit'])
     # Referente a Assessores
-    elif "Para finalizar nos informe apenas os numeros do telefone que" in general_session['namedep1'] or "Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
+    elif "Para finalizar nos informe apenas os números do telefone que" in general_session['namedep1'] or "Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos" in general_session['namedep1']:
         registra_user_general(message.chat.id, limpaddd(
             general_session['namedep2']), "tel")
         tel_session = app.get_user_general(message.chat.id)
 
         if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-            await message.reply('Numero digitado fora do padrão. Um numero de telefone tem que ter 8 ou 9 dígitos')
-            print("numero: ", tel_session["tel"])
+            await message.reply('Número digitado fora do padrão. Um número de telefone tem que ter 8 ou 9 dígitos')
+            print("número: ", tel_session["tel"])
         else:
             registra_sess_data(message.chat.id, tel_session["tel"], 'tel_ass')
             obj_comp = app.get_user_data(message.chat.id)
@@ -1382,18 +1382,18 @@ async def messages(Client, message):
                                     id_a=obj_comp['id_a'], nome_tit=converte_nome(obj_comp['nome_tit']), ddd=obj_comp['ddd_ass'], telfnumber=obj_comp['tel_ass'])
                 await app.send_message(message.chat.id, 'Sua confirmação de cadastro será encaminhada em breve')
 
-    elif "Senhor Assessor, digite os dois numeros de seu DDD sem as parênteses" in general_session['namedep1'] or "Valor fora das regras. Digite apenas os dois numeros do seu DDD" in general_session['namedep1']:
+    elif "Senhor Assessor, digite os dois números de seu DDD sem as parênteses" in general_session['namedep1'] or "Valor fora das regras. Digite apenas os dois números do seu DDD" in general_session['namedep1']:
 
         registra_user_general(message.chat.id, limpaddd(
             general_session['namedep2']), "ddd")
         ddd_session = app.get_user_general(message.chat.id)
 
         if len(ddd_session['ddd']) > 2:
-            await message.reply('Valor fora das regras. Digite apenas os dois numeros do seu DDD')
+            await message.reply('Valor fora das regras. Digite apenas os dois números do seu DDD')
             print("DDD: ", ddd_session['ddd'])
         else:
             registra_sess_data(message.chat.id, ddd_session['ddd'], 'ddd_ass')
-            await app.send_message(message.chat.id, f"Para finalizar nos informe apenas os numeros do telefone que o senhor deseja cadastrar")
+            await app.send_message(message.chat.id, f"Para finalizar nos informe apenas os números do telefone que o senhor deseja cadastrar")
 
     elif general_session['stado'] and general_session['stado']['state'] != None:
         if general_session['stado']['state'].startswith('help'):
@@ -1440,18 +1440,18 @@ async def messages(Client, message):
                     ddd_session = app.get_user_general(message.chat.id)
 
                     if len(ddd_session['ddd']) > 2:
-                        await message.reply('Formato incorreto. Insira apenas os dois numeros do seu DDD')
+                        await message.reply('Formato incorreto. Insira apenas os dois números do seu DDD')
                         print("DDD: ", ddd_session['ddd'])
                     else:
                         if (ddd_session['ddd'].isnumeric()):
 
                             db.atualiza_dado_tit(
                                 message.chat.id, 'ddd', general_session['namedep2'], 'p')
-                            await message.reply("Perfeito. Para concluir a edição digite o numero de telefone que deverá ser substituir o campo informado")
+                            await message.reply("Perfeito. Para concluir a edição digite o número de telefone que deverá ser substituir o campo informado")
                             registra_user_states(
                                 message.chat.id, EDIT_TELEFONE_T_P, "state")
                         else:
-                            await message.reply('Formato incorreto. Insira apenas os dois numeros do seu DDD')
+                            await message.reply('Formato incorreto. Insira apenas os dois números do seu DDD')
 
                 elif general_session['stado']['state'] == EDIT_TELEFONE_T_P or "Parece que você errou 😅" in general_session['namedep1']:
                     registra_user_general(
@@ -1459,7 +1459,7 @@ async def messages(Client, message):
                     tel_session = app.get_user_general(message.chat.id)
 
                     if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-                        await message.reply('Parece que você errou 😅. O numero de telefone tem que ter 8 ou 9 dígitos')
+                        await message.reply('Parece que você errou 😅. O número de telefone tem que ter 8 ou 9 dígitos')
                     else:
                         db.atualiza_dado_tit(
                             message.chat.id, 'telfnumber', general_session['namedep2'], 'p')
@@ -1494,17 +1494,17 @@ async def messages(Client, message):
                     ddd_session = app.get_user_general(message.chat.id)
 
                     if len(ddd_session['ddd']) != 2:
-                        await message.reply('Tente novamente. Insira apenas os dois numeros do seu DDD')
+                        await message.reply('Tente novamente. Insira apenas os dois números do seu DDD')
                         print("DDD: ", ddd_session['ddd'])
                     else:
                         if (ddd_session['ddd'].isnumeric()):
                             db.atualiza_dado_ass(
                                 message.chat.id, 'ddd', general_session['namedep2'], 'p')
-                            await message.reply("Perfeito Sr assessor. Concluindo nossa edição digite o numero de telefone que deverá ser substituir o campo informado")
+                            await message.reply("Perfeito Sr assessor. Concluindo nossa edição digite o número de telefone que deverá ser substituir o campo informado")
                             registra_user_states(
                                 message.chat.id, EDIT_TELEFONE_A_P, "state")
                         else:
-                            await message.reply('Tente novamente. Insira apenas os dois numeros do seu DDD')
+                            await message.reply('Tente novamente. Insira apenas os dois números do seu DDD')
 
                 elif general_session['stado']['state'] == EDIT_TELEFONE_A_P or "Algo está incorreto !!" in general_session['namedep1']:
                     registra_user_general(
@@ -1512,7 +1512,7 @@ async def messages(Client, message):
                     tel_session = app.get_user_general(message.chat.id)
 
                     if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-                        await message.reply('Algo está incorreto !!. O numero de telefone deve que ter 8 ou 9 dígitos')
+                        await message.reply('Algo está incorreto !!. O número de telefone deve que ter 8 ou 9 dígitos')
                     else:
                         db.atualiza_dado_ass(
                             message.chat.id, 'telfnumber', general_session['namedep2'], 'p')
@@ -1536,18 +1536,18 @@ async def messages(Client, message):
                     ddd_session = app.get_user_general(message.chat.id)
 
                     if len(ddd_session['ddd']) > 2:
-                        await message.reply('Algo incorreto. Insira apenas os dois numeros do seu DDD')
+                        await message.reply('Algo incorreto. Insira apenas os dois números do seu DDD')
                         print("DDD: ", ddd_session['ddd'])
                     else:
                         if (ddd_session['ddd'].isnumeric()):
 
                             db.atualiza_dado_tit(
                                 message.chat.id, 'ddd', general_session['namedep2'], 'f')
-                            await message.reply("Perfeito. Para concluir a edição digite o numero de telefone que deverá ser substituir o campo informado")
+                            await message.reply("Perfeito. Para concluir a edição digite o número de telefone que deverá ser substituir o campo informado")
                             registra_user_states(
                                 message.chat.id, EDIT_TELEFONE_T_F, "state")
                         else:
-                            await message.reply('Algo incorreto. Insira apenas os dois numeros do seu DDD')
+                            await message.reply('Algo incorreto. Insira apenas os dois números do seu DDD')
 
                 elif general_session['stado']['state'] == EDIT_TELEFONE_T_F or "Me parece que se enganou 😅" in general_session['namedep1']:
                     registra_user_general(
@@ -1555,7 +1555,7 @@ async def messages(Client, message):
                     tel_session = app.get_user_general(message.chat.id)
 
                     if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-                        await message.reply('Me parece que se enganou 😅. O numero de telefone tem que ter 8 ou 9 dígitos')
+                        await message.reply('Me parece que se enganou 😅. O número de telefone tem que ter 8 ou 9 dígitos')
                     else:
                         db.atualiza_dado_tit(
                             message.chat.id, 'telfnumber', general_session['namedep2'], 'f')
@@ -1576,18 +1576,18 @@ async def messages(Client, message):
                     ddd_session = app.get_user_general(message.chat.id)
 
                     if len(ddd_session['ddd']) > 2:
-                        await message.reply('Algo incorreto. Insira apenas os dois numeros do seu DDD')
+                        await message.reply('Algo incorreto. Insira apenas os dois números do seu DDD')
                         print("DDD: ", ddd_session['ddd'])
                     else:
                         if (ddd_session['ddd'].isnumeric()):
 
                             db.atualiza_dado_ass(
                                 message.chat.id, 'ddd', general_session['namedep2'], 'f')
-                            await message.reply("Perfeito. Para concluir a edição digite o numero de telefone que deverá ser substituir o campo informado")
+                            await message.reply("Perfeito. Para concluir a edição digite o número de telefone que deverá ser substituir o campo informado")
                             registra_user_states(
                                 message.chat.id, EDIT_TELEFONE_A_F, "state")
                         else:
-                            await message.reply('Algo incorreto. Insira apenas os dois numeros do seu DDD')
+                            await message.reply('Algo incorreto. Insira apenas os dois números do seu DDD')
 
                 elif general_session['stado']['state'] == EDIT_TELEFONE_A_F or "Me parece que se enganou 😅" in general_session['namedep1']:
                     registra_user_general(
@@ -1595,7 +1595,7 @@ async def messages(Client, message):
                     tel_session = app.get_user_general(message.chat.id)
 
                     if len(tel_session["tel"]) > 9 or len(tel_session["tel"]) < 8:
-                        await message.reply('Me parece que se enganou 😅. O numero de telefone tem que ter 8 ou 9 dígitos')
+                        await message.reply('Me parece que se enganou 😅. O número de telefone tem que ter 8 ou 9 dígitos')
                     else:
                         db.atualiza_dado_ass(
                             message.chat.id, 'telfnumber', general_session['namedep2'], 'f')
