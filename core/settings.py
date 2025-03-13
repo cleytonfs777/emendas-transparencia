@@ -80,7 +80,7 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://web-production-cebe.up.railway.app']
+CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://disparoetransparencia.up.railway.app']
 
 
 
