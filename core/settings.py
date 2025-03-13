@@ -15,6 +15,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+print(f"Database URL: {os.getenv('DATABASE_URL')}")
+
 
 INSTALLED_APPS = [
     # MINHAS APPS
